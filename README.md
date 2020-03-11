@@ -90,7 +90,6 @@ At this stage I mainly focus on the functionalities, although I do refactor as o
 
 ## TODO
 
- - Clean Code (OOP, Value Object, etc)
  - Exporting data (csv)
  - API endpoint
  - Add tests

@@ -4,6 +4,9 @@ namespace Covid19\Utils;
 
 class GetoptsHandler
 {
+    const DATA_FILE_PROVINCE = '/data/dati-province/dpc-covid19-ita-province.csv';
+    const DATA_FILE_REGION   = '/data/dati-regioni/dpc-covid19-ita-regioni.csv';
+
     protected $options = [];
 
     public function handleOptions()
@@ -23,8 +26,8 @@ class GetoptsHandler
         $type  = $province ? 'province' : ($region ? 'region' : null);
         $value = $province ?? $region ?? null;
 
-        $this->options['lastWeek']  = isset($options['last-week']);
-        $this->options['lastMonth'] = isset($options['last-month']);
+        $this->options['lastDays'] = isset($options['last-week']) ? 7 : null;
+        $this->options['lastDays'] = isset($options['last-month']) ? 31 : $this->options['lastDays'];
     
         $this->handlePlace($type, $value);
     }
@@ -42,15 +45,15 @@ class GetoptsHandler
 
     protected function showRegion(string $name)
     {
-        $this->options['folder']     = '/dati-regioni/';
-        $this->options['type']       = 'denominazione_regione';
+        $this->options['file']       = self::DATA_FILE_REGIONI;
+        $this->options['type']       = 'regione';
         $this->options['userChoice'] = $name;
     }
 
     protected function showProvince(string $name)
     {
-        $this->options['folder']     = '/dati-province/';
-        $this->options['type']       = 'denominazione_provincia';
+        $this->options['file']       = self::DATA_FILE_PROVINCE;
+        $this->options['type']       = 'provincia';
         $this->options['userChoice'] = $name;
     }
 

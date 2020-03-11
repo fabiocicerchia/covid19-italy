@@ -2,75 +2,54 @@
 
 namespace Covid19\Service;
 
-use League\Csv\Reader;
+use Covid19\ValueObject\UserChoice;
 
 class ReportCasesService
 {
-    const REGEX_DATA_FILES = '/^dpc-covid19-ita-(province|regioni)-\d{8}\.csv$/';
-
     protected $userChoice;
-    protected $type;
-    protected $folder;
-    protected $lastWeek = false;
-    protected $lastMonth = false;
+    protected $file;
+    protected $lastDays;
 
-    public function __construct(string $folder, array $options = [])
+    public function __construct(\Iterator $csvDocument, UserChoice $userChoice, int $lastDays = null)
     {
-        $this->folder = $folder . $options['folder'];
-
-        if (isset($options['type'])) {
-            $this->type = (string) $options['type'];
-        }
-        if (isset($options['userChoice'])) {
-            $this->userChoice = (string) $options['userChoice'];
-        }
-        if (isset($options['lastWeek'])) {
-            $this->lastWeek = (bool) $options['lastWeek'];
-        }
-        if (isset($options['lastMonth'])) {
-            $this->lastMonth = (bool) $options['lastMonth'];
-        }
+        $this->file       = $csvDocument;
+        $this->userChoice = $userChoice;
+        $this->lastDays   = $lastDays;
     }
 
-    protected function readCsv()
-    {
-        $files = scandir($this->folder);
-        $csvFiles = array_filter($files, function ($item) {
-            return (preg_match(self::REGEX_DATA_FILES, $item) === 1);
-        });
-
-        $data = [];
-        foreach ($csvFiles as $csvFile) {
-            $csv = Reader::createFromPath($this->folder . $csvFile, 'r');
-            $csv->setHeaderOffset(0);
-    
-            $data = array_merge($data, iterator_to_array($csv));
-        }
-    
-        return $data;
-    }
-    
     public function processData()
     {
-        $csv = $this->readCsv();
+        // the file is sorted by date ascending, we need it descending
+        // TODO: move it somewhere else
+        $csvData = array_reverse(iterator_to_array($this->file));
     
+        $typeKey = $this->getTypeKey();
         $data = [];
-        foreach ($csv as $record) {
-            if (strtolower($record[$this->type]) === $this->userChoice) {
+
+        $countDays = 0;
+        foreach ($csvData as $record) {
+            if (strtolower($record[$typeKey]) === $this->userChoice->value()) {
                 $data[$record['data']] = $record['totale_casi'];
+
+                $countDays++;
+                if ($countDays === $this->lastDays) break;
             }
         }
-    
-        // TODO: MOVE THIS LOGIC IN THE CSV PROCESSING TO REDUCE THE DATA
-        if ($this->lastMonth) {
-            $data = array_slice($data, max(count($data) - 31, 0), 31);
-        } elseif ($this->lastWeek) {
-            $data = array_slice($data, max(count($data) - 7, 0), 7);
-        }
-    
+
         ksort($data);
     
         $this->data = $data;
+    }
+
+    private function getTypeKey()
+    {
+        return $this->userChoice->type() === 'regione'
+               ? 'denominazione_regione'
+               : (
+                   $this->userChoice->type() === 'provincia'
+                  ? 'denominazione_provincia'
+                  : null
+                 );
     }
 
     public function getData()

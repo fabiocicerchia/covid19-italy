@@ -10,7 +10,7 @@ class ReportFormatter
     {
         $data = $service->getData();
 
-        printf('COVID-19 CASES IN %s' . PHP_EOL, strtoupper($service->getUserChoice()));
+        printf('COVID-19 CASES IN %s' . PHP_EOL, strtoupper($service->getUserChoice()->value()));
 
         if (empty($data)) {
             printf('No cases found' . PHP_EOL);
