@@ -1,4 +1,4 @@
-# COVID-19 ITALY - TREND BY PROVINCE
+# COVID-19 ITALY - TRENDS
 
 **What's COVID-19?**
 
@@ -9,7 +9,8 @@
 **How can I help prevent the spreading?**
 
 Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
-spreading even more is: **STAYING AT HOME**
+spreading even more is: **STAYING AT HOME**.
+
 This is not an official source so please do get informed with your local authorities in regards to what measures have
 been put in place to contain the virus.
 
@@ -30,8 +31,14 @@ composer install
 ## Run
 
 ```
-$ ./trend.php roma
-TOTAL CASES IN THE PROVINCE OF ROMA
+$ ./trend.php --help
+COVID-19 ITALY - TRENDS
+ ./trend.php [--province x|--region y] [--last-week|--last-month]
+```
+
+```
+$ ./trend.php --province roma
+TOTAL CASES IN ROMA
 2020-02-24:  0
 2020-02-25:  3
 2020-02-26:  3 ->   +0%
@@ -50,9 +57,38 @@ TOTAL CASES IN THE PROVINCE OF ROMA
 2020-03-10: 76 ->  -16%
 ```
 
+```
+$ ./trend.php --region lazio
+TOTAL CASES IN LAZIO
+2020-02-24:   3
+2020-02-25:   3 ->   +0%
+2020-02-26:   3 ->   +0%
+2020-02-27:   3 ->   +0%
+2020-02-28:   3 ->   +0%
+2020-02-29:   6 -> +100%
+2020-03-01:   6 ->   +0%
+2020-03-02:   7 ->  +16%
+2020-03-03:  14 -> +100%
+2020-03-04:  30 -> +114%
+2020-03-05:  44 ->  +46%
+2020-03-06:  54 ->  +22%
+2020-03-07:  76 ->  +40%
+2020-03-08:  87 ->  +14%
+2020-03-09: 102 ->  +17%
+2020-03-10: 116 ->  +13%
+```
+
+## CONTRIBUTE
+
+Any contribution is very welcomed!
+
 ## TODO
 
  - Web GUI
  - Heroku
- - Last 7 days
- - Last 30 days
+ - Cleaning Code (OOP, etc)
+ - Exporting data
+ - API endpoint
+ - One-liner installer
+ - Packagist (?)
+ - Docker (?)
