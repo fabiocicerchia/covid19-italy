@@ -1,0 +1,16 @@
+{
+    "name": "fabiocicerchia/covid19-italy",
+    "description": "COVID-19 ITALY - TREND BY PROVINCE",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabio Cicerchia",
+            "email": "info@fabiocicerchia.it"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "league/csv": "^9.5"
+    }
+}
