@@ -12,5 +12,10 @@
     "minimum-stability": "stable",
     "require": {
         "league/csv": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Covid19\\": "src/Covid19"
+        }
     }
 }
