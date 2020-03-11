@@ -29,23 +29,38 @@ class ReportCasesService
             die($this->usageHelp());
         }
     
-        $showProvince = strtolower($options['province'] ?? null);
-        $showRegion   = strtolower($options['region'] ?? null);
+        $province = $options['province'] ?? null;
+        $region   = $options['region'] ?? null;
 
-        $this->lastWeek = isset($options['last-week']);
+        $type  = $province ? 'province' : ($region ? 'region' : null);
+        $value = $province ?? $region ?? null;
+
+        $this->lastWeek  = isset($options['last-week']);
         $this->lastMonth = isset($options['last-month']);
     
-        if ($showRegion !== '') {
-            $this->folder = $this->dataFolder . '/dati-regioni/';
-            $this->type = 'denominazione_regione';
-            $this->userChoice = $showRegion;
-        } elseif ($showProvince !== '') {
-            $this->folder = $this->dataFolder . '/dati-province/';
-            $this->type = 'denominazione_provincia';
-            $this->userChoice = $showProvince;
+        $this->handlePlace($type, $value);
+    }
+
+    public function handlePlace($type, $value) {
+        if ($type === 'region') {
+            $this->showRegion(strtolower($value));
+        } elseif ($type === 'province') {
+            $this->showProvince(strtolower($value));
         } else {
             die($this->usageHelp('You must select a region or a province'));
         }
+    }
+
+    public function showRegion(string $name) {
+        $this->folder = $this->dataFolder . '/dati-regioni/';
+        $this->type = 'denominazione_regione';
+        $this->userChoice = $name;
+    }
+
+    public function showProvince(string $name) {
+        $this->folder = $this->dataFolder . '/dati-province/';
+        $this->type = 'denominazione_provincia';
+        $this->userChoice = $name;
     }
 
     protected function usageHelp(string $customMessage = null) {

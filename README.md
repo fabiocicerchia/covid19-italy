@@ -1,5 +1,8 @@
 # COVID-19 ITALY - TRENDS
 
+[![Pull Requests](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/fabiocicerchia/covid19-italy/pulls)
+[![MIT License](https://img.shields.io/badge/License-MIT-lightgrey.svg?longCache=true)](LICENSE)
+
 **What's COVID-19?**
 
 > Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2
@@ -24,7 +27,7 @@ This repo is based on the official data released by the [Protezione Civile](http
 ## Install
 
 ```
-git submodule update
+git submodule init && git submodule update
 composer install
 ```
 
@@ -82,13 +85,15 @@ TOTAL CASES IN LAZIO
 
 Any contribution is very welcomed!
 
+**NOTE:** I've tried to be as much practical as possible, without going too deep with design-patterns and best-practices.
+Although I'll refactor asap as much as possible.
+
 ## TODO
 
- - Web GUI
- - Heroku
  - Cleaning Code (OOP, etc)
  - Exporting data
  - API endpoint
  - One-liner installer
  - Packagist (?)
  - Docker (?)
+ - CLI colours
