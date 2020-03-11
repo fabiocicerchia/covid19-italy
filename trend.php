@@ -3,8 +3,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-$service = new \Covid19\Service\ReportCasesService(__DIR__ . '/data');
+$formatter = new \Covid19\Utils\ReportFormatter;
+$getopts = new \Covid19\Utils\GetoptsHandler;
 
-$service->handleOptions();
-$data = $service->processData();
-$service->printTotalCases($data);
+$getopts->handleOptions();
+$service = new \Covid19\Service\ReportCasesService(
+    __DIR__ . '/data',
+    $getopts->getOptions(),
+);
+$service->processData();
+$formatter->output($service);

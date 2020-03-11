@@ -86,14 +86,18 @@ TOTAL CASES IN LAZIO
 Any contribution is very welcomed!
 
 **NOTE:** I've tried to be as much practical as possible, without going too deep with design-patterns and best-practices.
-Although I'll refactor asap as much as possible.
+At this stage I mainly focus on the functionalities, although I do refactor as often as possible.
 
 ## TODO
 
- - Cleaning Code (OOP, etc)
- - Exporting data
+ - Clean Code (OOP, Value Object, etc)
+ - Exporting data (csv)
  - API endpoint
+ - Add tests
+ - TravisCI
  - One-liner installer
  - Packagist (?)
  - Docker (?)
  - CLI colours
+ - Use fostam/getopts or symfony/console
+ - Convert todo list to issues
