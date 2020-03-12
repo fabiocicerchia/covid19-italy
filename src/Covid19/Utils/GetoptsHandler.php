@@ -4,8 +4,8 @@ namespace Covid19\Utils;
 
 class GetoptsHandler
 {
-    const DATA_FILE_PROVINCE = '/data/dati-province/dpc-covid19-ita-province.csv';
-    const DATA_FILE_REGION   = '/data/dati-regioni/dpc-covid19-ita-regioni.csv';
+    const DATA_FILE_PROVINCE = '/data/pcm-dpc/dati-province/dpc-covid19-ita-province.csv';
+    const DATA_FILE_REGIONI  = '/data/pcm-dpc/dati-regioni/dpc-covid19-ita-regioni.csv';
 
     protected $options = [];
 

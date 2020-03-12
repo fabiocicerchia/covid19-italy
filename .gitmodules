@@ -1,3 +1,7 @@
-[submodule "data"]
-	path = data
+[submodule "data/pcm-dpc"]
+	path = data/pcm-dpc
 	url = https://github.com/pcm-dpc/COVID-19.git
+
+[submodule "data/openpolis"]
+	path = data/openpolis
+	url = https://github.com/openpolis/geojson-italy.git

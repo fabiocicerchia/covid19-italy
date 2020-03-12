@@ -10,7 +10,7 @@ class ReportFormatter
     {
         $data = $service->getData();
 
-        printf('COVID-19 CASES IN %s' . PHP_EOL, strtoupper($service->getUserChoice()->value()));
+        printf('COVID-19 TOTAL CASES IN %s' . PHP_EOL, strtoupper($service->getUserChoice()->value()));
 
         if (empty($data)) {
             printf('No cases found' . PHP_EOL);
@@ -19,9 +19,8 @@ class ReportFormatter
 
         $maxPadding = strlen(max($data));
 
-        $sum = $previous = 0;
+        $previous = 0;
         foreach ($data as $dataora => $casi) {
-            $sum += $casi;
             $data = (\DateTime::createFromFormat('Y-m-d H:i:s', $dataora))->format('Y-m-d');
             printf('%s: %' . $maxPadding . 'd', $data, $casi);
             if ($previous > 0) {
@@ -31,7 +30,5 @@ class ReportFormatter
             printf(PHP_EOL);
             $previous = $casi;
         }
-
-        printf('TOTAL CASES: %d' . PHP_EOL, $sum);
     }
 }
