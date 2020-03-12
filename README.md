@@ -18,7 +18,8 @@ This is not an official source so please do get informed with your local authori
 been put in place to contain the virus.
 
 This repo is based on the official data released by the [Protezione Civile](https://github.com/pcm-dpc) under the
-[CC-BY-4.0 license](https://github.com/pcm-dpc/COVID-19/blob/master/LICENSE).
+[CC-BY-4.0 license](https://github.com/pcm-dpc/COVID-19/blob/master/LICENSE) and the geography data by
+[Openpolis](https://github.com/openpolis).
 
 ## Requirements
 

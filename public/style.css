@@ -5,3 +5,32 @@ html, body {
 #map {
     height: 700px;
 }
+footer {
+    position: absolute;
+    bottom: 0.5em;
+}
+#dayBefore,
+#dayAfter {
+    position: absolute;
+    top: 1em;
+    z-index: 9999;
+    height: 30px;
+    width: 30px;
+    color: black;
+    border-radius: 5px;
+    font-size: 0.6em;
+    float: right;
+}
+#dayBefore { right: 5em; }
+#dayAfter { right: 2em; }
+
+#lastUpdate {
+    position: absolute;
+    background: white;
+    top: 5em;
+    z-index: 9999;
+    display: block;
+    right: 2.5em;
+    font-size: 0.6em;
+    padding: 0.5em;
+}
