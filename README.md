@@ -31,21 +31,20 @@ This repo is based on the official data released by the [Protezione Civile](http
 ## Install
 
 ```
-git submodule init && git submodule update
-composer install
+$ ./setup.sh
 ```
 
 ## Run
 
 ```
-$ ./trend.php --help
+$ ./bin/trend --help
 COVID-19 ITALY - TRENDS
- ./trend.php [--province x|--region y] [--last-week|--last-month]
+ ./bin/trend [--province x|--region y] [--last-week|--last-month]
 ```
 
 ```
-$ ./trend.php --province roma
-TOTAL CASES IN ROMA
+$ ./bin/trend --province roma
+COVID-19 TOTAL CASES IN ROMA
 2020-02-24:  0
 2020-02-25:  3
 2020-02-26:  3 ->   +0%
@@ -65,8 +64,8 @@ TOTAL CASES IN ROMA
 ```
 
 ```
-$ ./trend.php --region lazio
-TOTAL CASES IN LAZIO
+$ ./bin/trend --region lazio
+COVID-19 TOTAL CASES IN LAZIO
 2020-02-24:   3
 2020-02-25:   3 ->   +0%
 2020-02-26:   3 ->   +0%

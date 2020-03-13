@@ -14,7 +14,7 @@ class ReportFactory
         $service = new \Covid19\Service\ReportCasesService(
             $csv->getRecords(),
             new \Covid19\ValueObject\UserChoice($options['type'], $options['userChoice']),
-            $options['lastDays']
+            $options['lastDays'] ?? null
         );
 
         return $service;
