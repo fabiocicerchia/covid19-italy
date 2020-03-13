@@ -17,14 +17,18 @@ function fetchJSONFile(path, callback) {
 }
 
 function normalisePlace(place) {
-    var lowerPlace = place.toLowerCase();
+    var lowerPlace = place === undefined ? '' : place.toLowerCase();
 
     // italian
-    if (lowerPlace === 'valle d\'aosta/vallée d\'aoste') return 'aosta';
+    if (lowerPlace === 'valle d\'aosta/vallée d\'aoste') return 'valle d\'aosta';
     else if (lowerPlace === 'bolzano/bozen') return 'bolzano';
     else if (lowerPlace === 'massa-carrara') return 'massa carrara';
     else if (lowerPlace === 'alto adige') return 'p.a. bolzano';
     else if (lowerPlace === 'trentino') return 'p.a. trento';
+    else if (lowerPlace === 'emilia-romagna') return 'emilia romagna';
+    else if (lowerPlace === 'trentino-alto adige/südtirol') return 'p.a. trento'; // TODO: IT SHOULD INCLUDE ALTO ADIGE AS WELL (EITHER SUM OR SPLIT)
+    else if (lowerPlace === 'friuli-venezia giulia') return 'friuli venezia giulia';
+    else if (lowerPlace === 'aosta') return 'valle d\'aosta';
 
     // english
     if (lowerPlace === 'florence') return 'firenze';
@@ -49,8 +53,8 @@ function normalisePlace(place) {
     return lowerPlace;
 }
 
-function paintMap(type, data, lastUpdate) {
-    document.getElementById('lastUpdate').innerHTML = lastUpdate;
+function paintMap(type, data, lastUpdateDate) {
+    document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
     var max = Math.max.apply(Math, Object.values(data));
 
     var endpoint = type === 'region'
@@ -82,13 +86,13 @@ function paintMap(type, data, lastUpdate) {
                var cases = data[place];
                var popupContent = '<strong>' + place + '</strong><br>';
                popupContent += 'Cases: ' + cases + '<br>';
-               popupContent += '<small>Updated on ' + lastUpdate + '<small>';
+               popupContent += '<small>Updated on ' + lastUpdateDate + '<small>';
                layer.bindPopup(popupContent);
            }
         })
         .addTo(map)
         .on('click', function(e) {
-            document.getElementById('type-form').value = type;
+            document.getElementById('type-form-' + type).checked = true
             document.getElementById('value-form').value = type === 'region'
                     ? normalisePlace(e.sourceTarget.feature.properties.reg_name)
                     : normalisePlace(e.sourceTarget.feature.properties.prov_name);
@@ -99,11 +103,14 @@ function paintMap(type, data, lastUpdate) {
 
 // SEARCH FORM
 document.getElementById('search-form').onsubmit = function(e) {
-    document.getElementById('value-form').value = normalisePlace(document.getElementById('value-form').value);
+    var valueField = document.getElementById('value-form');
+    valueField.value = valueField.value ? normalisePlace(valueField.value) : '';
+    var currentType = document.querySelector('input[name="type"]:checked').value;
+    paintMap(currentType, dataHistory[currentType][lastUpdate], lastUpdate);
 };
 
 // COVID DATA
-history = {region: {}, province: {}};
+dataHistory = {region: {}, province: {}};
 
 // GEOMAP
 var map = L.map('map').setView([41.8719, 12.5674], 6);
@@ -116,6 +123,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
 
 geoLayer = undefined;
+lastUpdate = undefined;
 
 Papa.parse('/dpc-covid19-ita-province.csv', {
     header: true,
@@ -126,12 +134,12 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var yesterday = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate() - 1).toString().padStart(2, '0');
         results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
-            if (typeof history['province'][parsedDate] === 'undefined') history['province'][parsedDate] = {};
+            if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
 	    province = normalisePlace(item.denominazione_provincia);
-            history['province'][parsedDate][province] = parseInt(item.totale_casi, 10);
+            dataHistory['province'][parsedDate][province] = parseInt(item.totale_casi, 10);
         });
-        var dataProvince = history['province'][today] || history['province'][yesterday];
-        var lastUpdate = history['province'][today] ? today : yesterday;
+        var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
+        lastUpdate = dataHistory['province'][today] ? today : yesterday;
         var sumCases = Object.values(dataProvince).reduce((a, b) => a + b, 0);
         document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
 
@@ -148,45 +156,50 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         var yesterday = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate() - 1).toString().padStart(2, '0');
         results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
-            if (typeof history['region'][parsedDate] === 'undefined') history['region'][parsedDate] = {};
-	    province = normalisePlace(item.denominazione_provincia);
-            history['region'][parsedDate][province] = parseInt(item.totale_casi, 10);
+            if (typeof dataHistory['region'][parsedDate] === 'undefined') dataHistory['region'][parsedDate] = {};
+	    province = normalisePlace(item.denominazione_regione);
+            dataHistory['region'][parsedDate][province] = parseInt(item.totale_casi, 10);
         });
-        var dataProvince = history['region'][today] || history['region'][yesterday];
-        var lastUpdate = history['region'][today] ? today : yesterday;
-        var sumCases = Object.values(dataProvince).reduce((a, b) => a + b, 0);
+        var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
+        var sumCases = Object.values(dataRegion).reduce((a, b) => a + b, 0);
         document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
     }
 });
 
 currentDate = lastUpdate;
-document.getElementById('dayFirst').onclick = function() {
+document.getElementById('dayFirst').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var first = Object.keys(history[currentType])[0];
+    var first = Object.keys(dataHistory[currentType])[0];
     lastUpdate = first;
 
-    paintMap(currentType, history[currentType][first], first);
-};
-document.getElementById('dayBefore').onclick = function() {
+    paintMap(currentType, dataHistory[currentType][first], first);
+});
+document.getElementById('dayBefore').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var date = new Date(Date.parse(currentDate.innerHTML) - (24 * 60 * 60 * 1000));
     var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
     lastUpdate = before;
 
-    paintMap(currentType, history[currentType][before], before);
-};
-document.getElementById('dayAfter').onclick = function() {
+    paintMap(currentType, dataHistory[currentType][before], before);
+});
+document.getElementById('dayAfter').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var date = new Date(Date.parse(currentDate.innerHTML) + (24 * 60 * 60 * 1000));
     var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
     lastUpdate = after;
 
-    paintMap(currentType, history[currentType][after], after);
-};
-document.getElementById('dayLast').onclick = function() {
+    paintMap(currentType, dataHistory[currentType][after], after);
+});
+document.getElementById('dayLast').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var last = Object.keys(history[currentType])[Object.keys(history[currentType]).length - 1];
+    var last = Object.keys(dataHistory[currentType])[Object.keys(dataHistory[currentType]).length - 1];
     lastUpdate = last;
 
-    paintMap(currentType, history[currentType][last], last);
-};
+    paintMap(currentType, dataHistory[currentType][last], last);
+});
+document.getElementById('type-region').addEventListener('click', function() {
+    paintMap('region', dataHistory['region'][lastUpdate], lastUpdate);
+});
+document.getElementById('type-province').addEventListener('click', function() {
+    paintMap('province', dataHistory['province'][lastUpdate], lastUpdate);
+});

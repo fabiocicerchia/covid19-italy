@@ -44,3 +44,11 @@ footer {
     max-height: 400px;
     border: 0;
 }
+
+.leaflet-popup-content strong {
+    text-transform: capitalize;
+}
+
+.navbar {
+    background-color: #117a8b;
+}

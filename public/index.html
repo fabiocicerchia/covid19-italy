@@ -15,12 +15,12 @@
     </head>
     <body>
         <header>
-            <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="navbar navbar-dark shadow-sm">
                 <div class="container-fluid">
                     <a href="/" class="navbar-brand">
-                        <h1 class="small float-left m-0">COVID-19 Spreading in Italy</h1>
+                        <h1 class="small float-left m-0 font-weight-bold">COVID-19 Spreading in Italy</h1>
                     </a>
-                    <span class="float-right d-block btn btn-info py-0 py-sm-1 px-1 px-sm-1">Total Cases: <span class="badge badge-light" id="totalCases">-</span></span>
+                    <span class="float-right d-block btn btn-light py-0 py-sm-1 px-1 px-sm-1">Total Cases: <span class="badge badge-warning" id="totalCases">-</span></span>
                 </div>
             </div>
         </header>
@@ -47,18 +47,18 @@
                         <form action="/trend.php" method="post" id="search-form" target="results" class="form-inline">
                             <div class="form-group mb-2">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-secondary active">
-                                        <input type="radio" name="type" value="province" autocomplete="off" checked> Province
+                                    <label class="btn btn-info active" id="type-province">
+                                        <input type="radio" id="type-form-province" name="type" value="province" autocomplete="off" checked> Province
                                     </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="radio" name="type" value="region" autocomplete="off"> Region
+                                    <label class="btn btn-info" id="type-region">
+                                        <input type="radio" id="type-form-region" name="type" value="region" autocomplete="off"> Region
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group mx-2 mb-2">
                                 <input type="text" id="value-form" name="value" placeholder="Name of the place" required class="form-control"/>
                             </div>
-                            <input type="submit" value="Show" class="btn btn-secondary mb-2" />
+                            <input type="submit" value="Show" class="btn btn-dark mb-2" />
                         </form>
                         <iframe id="results" name="results" src=""></iframe>
                     </div>
