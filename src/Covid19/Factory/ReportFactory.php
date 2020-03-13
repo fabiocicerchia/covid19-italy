@@ -17,6 +17,6 @@ class ReportFactory
             $options['lastDays']
         );
 
-	return $service;
+        return $service;
     }
 }

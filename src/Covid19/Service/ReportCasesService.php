@@ -32,7 +32,9 @@ class ReportCasesService
                 $data[$record['data']] = $record['totale_casi'];
 
                 $countDays++;
-                if ($countDays === $this->lastDays) break;
+                if ($countDays === $this->lastDays) {
+                    break;
+                }
             }
         }
 
@@ -49,7 +51,7 @@ class ReportCasesService
                    $this->userChoice->type() === 'provincia'
                   ? 'denominazione_provincia'
                   : null
-                 );
+               );
     }
 
     public function getData()

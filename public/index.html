@@ -15,9 +15,9 @@
             <div class="navbar navbar-dark bg-dark shadow-sm">
                 <div class="container-fluid">
                     <a href="/" class="navbar-brand">
-                        <h1 class="small float-left">COVID-19 Italy Trends</h1>
+                        <h1 class="small float-left">COVID-19 Spreading in Italy</h1>
                     </a>
-    	            <span class="float-right d-block btn btn-info">Total Cases: <span class="badge badge-light" id="totalCases">-</span></span>
+                    <span class="float-right d-block btn btn-info">Total Cases: <span class="badge badge-light" id="totalCases">-</span></span>
                 </div>
             </div>
         </header>
@@ -26,6 +26,19 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6 col-xs-12 mt-4">
+                        <div class="jumbotron small p-3">
+                            <p><strong>What's COVID-19?</strong></p>
+                            <blockquote cite="https://en.wikipedia.org/wiki/Coronavirus_disease_2019">
+                                Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2
+                                (SARS-CoV-2),[9] a virus closely related to the SARS virus.
+                            </blockquote>
+                            <p><strong>How can I help prevent the spreading?</strong></p>
+                            <p>Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
+                            spreading even more is: <strong>STAYING AT HOME</strong>.</p>
+                            <p>This is not an official source so please do get informed with your local authorities in regards to what measures have
+                            been put in place to contain the virus. More details on the
+                            <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019" target="_blank">Coronavirus disease (COVID-19) outbreak</a>.</p>
+                        </div>
                         <p>Use the following form to look for a region or a province in Italy:</p>
 
                         <form action="/index.php" method="post" id="search-form" target="results" class="form-inline">
@@ -37,13 +50,15 @@
                             </div>
                             <input type="submit" value="Show" class="btn btn-secondary mb-2" />
                         </form>
-                        <iframe id="results" name="results" src="" style="width: 100%; height: 400px; border: 0;"></iframe>
+                        <iframe id="results" name="results" src=""></iframe>
                     </div>
-                    <div class="col-sm-6 text-right d-none d-sm-block">
+                    <div class="col-sm-6 text-right d-none d-sm-block p-0">
                         <div id="map"></div>
                         <div id="lastUpdate"></div>
+                        <input type="button" id="dayFirst" value="|<" />
                         <input type="button" id="dayBefore" value="<<" />
-    		        <input type="button" id="dayAfter" value=">>" />
+                        <input type="button" id="dayAfter" value=">>" />
+                        <input type="button" id="dayLast" value=">|" />
                         <script src="/script.js"></script>
                     </div>
                 </div>
@@ -52,8 +67,10 @@
         <footer class="footer">
             <div class="container-fluid">
                 <small class="text-muted">
-                    &copy; 2020 Fabio Cicerchia. <a href="https://github.com/fabiocicerchia/covid19-italy" target="_blank">OpenSource Project</a> | Official Data by <a href="https://github.com/pcm-dpc">Protezione Civile (CC-BY-4.0)</a>.
-    	        </small>
+                    &copy; 2020 Fabio Cicerchia.
+		    <a href="https://github.com/fabiocicerchia/covid19-italy" target="_blank">OpenSource Project</a> |
+		    Official Data by <a href="https://github.com/pcm-dpc">Protezione Civile (CC-BY-4.0)</a>.
+                </small>
             </div>
         </footer>
     </body>

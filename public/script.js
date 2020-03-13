@@ -1,4 +1,4 @@
-function heatMapColorforValue(value){
+function heatMapColorforValue(value) {
     var h = (1.0 - value) * 240
     return "hsl(" + h + ", 100%, 50%)";
 }
@@ -14,7 +14,7 @@ function fetchJSONFile(path, callback) {
         }
     };
     httpRequest.open('GET', path);
-    httpRequest.send(); 
+    httpRequest.send();
 }
 
 var sliderControl = null;
@@ -42,30 +42,35 @@ function paintMap(dataProvince, lastUpdate) {
     var max = Math.max.apply(Math, Object.values(dataProvince));
 
     fetchJSONFile('/limits_IT_provinces.geojson', function(provinces) {
+        if (geoLayer !== undefined) {
+            geoLayer.remove();
+        }
         geoLayer = L.geoJSON(provinces, {
-            weight: 1,
-            style: function(feature) {
-                var place = normalisePlace(feature.properties.prov_name);
-                var cases = dataProvince[place];
+                weight: 1,
+                style: function(feature) {
+                    var place = normalisePlace(feature.properties.prov_name);
+                    var cases = dataProvince[place];
                     if (cases > 0) {
-                        return {color: heatMapColorforValue(Math.min(cases/max + 0.75, 1))};
+                        return {
+                            color: heatMapColorforValue(Math.min(cases / max + 0.75, 1))
+                        };
+                    }
+                },
+                onEachFeature: function(feature, layer) {
+                    var place = normalisePlace(feature.properties.prov_name);
+                    var cases = dataProvince[place];
+                    var popupContent = '<strong>' + place + '</strong><br>';
+                    popupContent += 'Cases: ' + cases + '<br>';
+                    popupContent += '<small>Updated on ' + lastUpdate + '<small>';
+                    layer.bindPopup(popupContent);
                 }
-            },
-            onEachFeature: function (feature, layer) {
-            var place = normalisePlace(feature.properties.prov_name);
-            var cases = dataProvince[place];
-                var popupContent = '<strong>'+place+'</strong><br>';
-        	popupContent += 'Cases: '+cases+'<br>';
-        	popupContent += '<small>Updated at '+lastUpdate+'<small>';
-                layer.bindPopup(popupContent);
-            }
-        })
-        .addTo(map)
-        .on('click', function(e) {
-            document.getElementById('type-form').value = 'province';
-            document.getElementById('value-form').value = normalisePlace(e.sourceTarget.feature.properties.prov_name);
-            document.getElementById('search-form').submit();
-        });
+            })
+            .addTo(map)
+            .on('click', function(e) {
+                document.getElementById('type-form').value = 'province';
+                document.getElementById('value-form').value = normalisePlace(e.sourceTarget.feature.properties.prov_name);
+                document.getElementById('search-form').submit();
+            });
     });
 }
 
@@ -76,7 +81,7 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var date = new Date();
         var today = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
         var yesterday = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate() - 1).toString().padStart(2, '0');
-        results.data.forEach(function (item) {
+        results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
             if (typeof history[parsedDate] === 'undefined') history[parsedDate] = {};
             history[parsedDate][item.denominazione_provincia] = parseInt(item.totale_casi, 10);
@@ -87,26 +92,36 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
 
         var colours = ['#ff0000', '#ff4e00', '#ff7100', '#ff8d00', '#ffa600', '#ffbe00', '#ffd400', '#ffea00', '#ffff00']
-    	    .reverse();
+            .reverse();
 
         paintMap(dataProvince, lastUpdate);
     }
 });
 
 currentDate = lastUpdate;
+document.getElementById('dayFirst').onclick = function() {
+    var first = Object.keys(history)[0];
+    lastUpdate = first;
+
+    paintMap(history[first], first);
+};
 document.getElementById('dayBefore').onclick = function() {
-    var date = new Date(Date.parse(currentDate.innerHTML) - (24*60*60 * 1000));
+    var date = new Date(Date.parse(currentDate.innerHTML) - (24 * 60 * 60 * 1000));
     var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
     lastUpdate = before;
 
-    geoLayer.remove();
     paintMap(history[before], before);
 };
 document.getElementById('dayAfter').onclick = function() {
-    var date = new Date(Date.parse(currentDate.innerHTML) + (24*60*60 * 1000));
+    var date = new Date(Date.parse(currentDate.innerHTML) + (24 * 60 * 60 * 1000));
     var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
     lastUpdate = after;
 
-    geoLayer.remove();
     paintMap(history[after], after);
+};
+document.getElementById('dayLast').onclick = function() {
+    var last = Object.keys(history)[Object.keys(history).length - 1];
+    lastUpdate = last;
+
+    paintMap(history[last], last);
 };
