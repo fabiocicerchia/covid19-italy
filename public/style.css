@@ -52,3 +52,7 @@ footer {
 .navbar {
     background-color: #117a8b;
 }
+
+a {
+    cursor: pointer;
+}

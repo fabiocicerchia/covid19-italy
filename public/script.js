@@ -16,6 +16,12 @@ function fetchJSONFile(path, callback) {
     httpRequest.send();
 }
 
+function switchRegion(el) {
+    document.getElementById('type-form-region').checked = true
+    document.getElementById('value-form').value = normalisePlace(el.innerHTML);
+    document.getElementById('search-form').submit();
+}
+
 function normalisePlace(place) {
     var lowerPlace = place === undefined ? '' : place.toLowerCase();
 
@@ -84,7 +90,7 @@ function paintMap(type, data, lastUpdateDate) {
                            ? normalisePlace(feature.properties.reg_name)
                            : normalisePlace(feature.properties.prov_name);
                var cases = data[place];
-               var popupContent = '<strong>' + place + '</strong><br>';
+               var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
                popupContent += 'Cases: ' + cases + '<br>';
                popupContent += '<small>Updated on ' + lastUpdateDate + '<small>';
                layer.bindPopup(popupContent);
