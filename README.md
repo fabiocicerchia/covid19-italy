@@ -85,6 +85,14 @@ TOTAL CASES IN LAZIO
 2020-03-10: 116 ->  +13%
 ```
 
+## Run web interface
+
+```
+$ php -S 127.0.0.1:8001 -t public
+```
+
+Then you can browse application on `http://127.0.0.1:8001/` (you can use a different port, if you prefer)
+
 ## CONTRIBUTE
 
 Any contribution is very welcomed!
