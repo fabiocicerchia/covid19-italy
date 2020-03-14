@@ -61,7 +61,7 @@ function normalisePlace(place) {
 
 function paintMap(type, data, lastUpdateDate) {
     document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
-    var max = Math.max.apply(Math, Object.values(data));
+    var max = Math.max.apply(Math, Object.values(data).map((i) => i.total));
 
     var endpoint = type === 'region'
                    ? '/limits_IT_regions.geojson'
@@ -78,7 +78,7 @@ function paintMap(type, data, lastUpdateDate) {
                var place = type === 'region'
                            ? normalisePlace(feature.properties.reg_name)
                            : normalisePlace(feature.properties.prov_name);
-               var cases = data[place];
+               var cases = data[place].total;
                if (cases > 0) {
                    return {
                        color: heatMapColorforValue(Math.min(cases / max + 0.75, 1))
@@ -89,14 +89,14 @@ function paintMap(type, data, lastUpdateDate) {
                var place = type === 'region'
                            ? normalisePlace(feature.properties.reg_name)
                            : normalisePlace(feature.properties.prov_name);
-               var cases = data[place];
+               var cases = data[place].total;
                var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
                popupContent += 'Cases: ' + cases + '<br>';
                popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
 	       if (place === 'p.a. trento') {
                    popupContent += '<br><strong>P.A. Bolzano</strong><br>';
-                   popupContent += 'Cases: ' + data['p.a. bolzano'] + '<br>';
+                   popupContent += 'Cases: ' + data['p.a. bolzano'].total + '<br>';
                    popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 	       }
                layer.bindPopup(popupContent);
@@ -148,14 +148,15 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
             if (item.data !== "") {
                 var parsedDate = item.data.substr(0, 10);
                 if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
-                province = normalisePlace(item.denominazione_provincia);
-                dataHistory['province'][parsedDate][province] = parseInt(item.totale_casi, 10);
-            }
+	        province = normalisePlace(item.denominazione_provincia);
+                dataHistory['province'][parsedDate][province] = { total: parseInt(item.totale_casi, 10) };
+	    }
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate = dataHistory['province'][today] ? today : yesterday;
-        var sumCases = Object.values(dataProvince).reduce((a, b) => a + b, 0);
+        var sumCases = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
         document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
+        document.getElementById('num_total').innerHTML = sumCases.toLocaleString();
 
         paintMap('province', dataProvince, lastUpdate);
     }
@@ -172,15 +173,28 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
             var parsedDate = item.data.substr(0, 10);
             if (typeof dataHistory['region'][parsedDate] === 'undefined') dataHistory['region'][parsedDate] = {};
 	    region = normalisePlace(item.denominazione_regione);
-            dataHistory['region'][parsedDate][region] = parseInt(item.totale_casi, 10);
+            dataHistory['region'][parsedDate][region] = {
+                total: parseInt(item.totale_casi, 10),
+		hospitalised: parseInt(item.ricoverati_con_sintomi, 10),
+		icu: parseInt(item.terapia_intensiva, 10),
+		home: parseInt(item.isolamento_domiciliare, 10),
+		total_active: parseInt(item.totale_attualmente_positivi, 10),
+		new_active: parseInt(item.nuovi_attualmente_positivi, 10),
+		recovered: parseInt(item.dimessi_guariti, 10),
+		death: parseInt(item.deceduti, 10),
+		tests: parseInt(item.tamponi, 10),
+	    };
         });
         var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
-        var sumCases = Object.values(dataRegion).reduce((a, b) => a + b, 0);
-        document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
+        var recovered = Object.values(dataRegion).map((i) => i.recovered).reduce((a, b) => a + b, 0);
+        var active = Object.values(dataRegion).map((i) => i.total_active).reduce((a, b) => a + b, 0);
+        var deaths  = Object.values(dataRegion).map((i) => i.death).reduce((a, b) => a + b, 0);
+        document.getElementById('num_active').innerHTML = active.toLocaleString();
+        document.getElementById('num_death').innerHTML = deaths.toLocaleString();
+        document.getElementById('num_recover').innerHTML = recovered.toLocaleString();
     }
 });
 
-currentDate = lastUpdate;
 document.getElementById('dayFirst').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var first = Object.keys(dataHistory[currentType])[0];
@@ -190,7 +204,7 @@ document.getElementById('dayFirst').addEventListener('click', function() {
 });
 document.getElementById('dayBefore').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var date = new Date(Date.parse(currentDate.innerHTML) - (24 * 60 * 60 * 1000));
+    var date = new Date(Date.parse(lastUpdate) - (24 * 60 * 60 * 1000));
     var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
 
     if (dataHistory[currentType][before] !== undefined) {
@@ -201,7 +215,7 @@ document.getElementById('dayBefore').addEventListener('click', function() {
 });
 document.getElementById('dayAfter').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var date = new Date(Date.parse(currentDate.innerHTML) + (24 * 60 * 60 * 1000));
+    var date = new Date(Date.parse(lastUpdate) + (24 * 60 * 60 * 1000));
     var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
 
     if (dataHistory[currentType][after] !== undefined) {

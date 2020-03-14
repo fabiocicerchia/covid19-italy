@@ -28,8 +28,10 @@
         <main role="main">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6 col-xs-12 mt-4">
-                        <div class="jumbotron small p-3">
+                    <div class="col-sm-6 col-xs-12 mt-3">
+                        <div class="alert alert-dark small p-3 mb-2 alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
                             <p><strong>What's COVID-19?</strong></p>
                             <blockquote cite="https://en.wikipedia.org/wiki/Coronavirus_disease_2019">
                                 Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2
@@ -38,9 +40,28 @@
                             <p><strong>How can I help prevent the spreading?</strong></p>
                             <p>Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
                             spreading even more is: <strong>STAYING AT HOME</strong>.</p>
+			    <hr>
                             <p>This is not an official source so please do get informed with your local authorities in regards to what measures have
                             been put in place to contain the virus. More details on the
                             <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019" target="_blank">Coronavirus disease (COVID-19) outbreak</a>.</p>
+                        </div>
+                        <div class="alert alert-info p-2 mb-2 small" role="alert">
+                            <p class="m-0"><strong>Want lots of graphs?</strong>
+                            <a href="https://datastudio.google.com/reporting/91350339-2c97-49b5-92b8-965996530f00" target="_blank">Coronavirus Italia - Google Data Studio</a> by <a href="https://twitter.com/FMossotto" target="_blank">FMossotto</a>.
+                        </div>
+                        <div class="row">
+                            <div class="col-3 px-1 pl-3">
+                                <div class="alert alert-danger small px-2" role="alert">Total Cases <strong id="num_total"></strong></div>
+                            </div>
+                            <div class="col-3 px-1">
+                                <div class="alert alert-danger small px-2" role="alert">Actual Cases <strong id="num_active"></strong></div>
+                            </div>
+                            <div class="col-3 px-1">
+                                <div class="alert alert-success small px-2" role="alert">Recovered <strong id="num_recover"></strong></div>
+                            </div>
+                            <div class="col-3 px-1 pr-3">
+                                <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong></div>
+                            </div>
                         </div>
                         <p>Use the following form to look for a region or a province in Italy:</p>
 
