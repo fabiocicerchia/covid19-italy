@@ -92,7 +92,13 @@ function paintMap(type, data, lastUpdateDate) {
                var cases = data[place];
                var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
                popupContent += 'Cases: ' + cases + '<br>';
-               popupContent += '<small>Updated on ' + lastUpdateDate + '<small>';
+               popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
+
+	       if (place === 'p.a. trento') {
+                   popupContent += '<br><strong>P.A. Bolzano</strong><br>';
+                   popupContent += 'Cases: ' + data['p.a. bolzano'] + '<br>';
+                   popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
+	       }
                layer.bindPopup(popupContent);
            }
         })
@@ -163,8 +169,8 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
             if (typeof dataHistory['region'][parsedDate] === 'undefined') dataHistory['region'][parsedDate] = {};
-	    province = normalisePlace(item.denominazione_regione);
-            dataHistory['region'][parsedDate][province] = parseInt(item.totale_casi, 10);
+	    region = normalisePlace(item.denominazione_regione);
+            dataHistory['region'][parsedDate][region] = parseInt(item.totale_casi, 10);
         });
         var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
         var sumCases = Object.values(dataRegion).reduce((a, b) => a + b, 0);
