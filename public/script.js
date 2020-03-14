@@ -145,10 +145,12 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var today = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
         var yesterday = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate() - 1).toString().padStart(2, '0');
         results.data.forEach(function(item) {
-            var parsedDate = item.data.substr(0, 10);
-            if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
-	    province = normalisePlace(item.denominazione_provincia);
-            dataHistory['province'][parsedDate][province] = parseInt(item.totale_casi, 10);
+            if (item.data !== "") {
+                var parsedDate = item.data.substr(0, 10);
+                if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
+                province = normalisePlace(item.denominazione_provincia);
+                dataHistory['province'][parsedDate][province] = parseInt(item.totale_casi, 10);
+            }
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate = dataHistory['province'][today] ? today : yesterday;
@@ -190,17 +192,23 @@ document.getElementById('dayBefore').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var date = new Date(Date.parse(currentDate.innerHTML) - (24 * 60 * 60 * 1000));
     var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
-    lastUpdate = before;
 
-    paintMap(currentType, dataHistory[currentType][before], before);
+    if (dataHistory[currentType][before] !== undefined) {
+        lastUpdate = before;
+
+        paintMap(currentType, dataHistory[currentType][before], before);
+    }
 });
 document.getElementById('dayAfter').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var date = new Date(Date.parse(currentDate.innerHTML) + (24 * 60 * 60 * 1000));
     var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
-    lastUpdate = after;
 
-    paintMap(currentType, dataHistory[currentType][after], after);
+    if (dataHistory[currentType][after] !== undefined) {
+        lastUpdate = after;
+
+        paintMap(currentType, dataHistory[currentType][after], after);
+    }
 });
 document.getElementById('dayLast').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
