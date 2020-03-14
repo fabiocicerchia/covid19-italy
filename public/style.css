@@ -56,3 +56,19 @@ footer {
 a {
     cursor: pointer;
 }
+
+@media only screen and (max-width: 768px) {
+    #search-form .form-group.mb-2 { width: 100%; }
+    #search-form .form-group.mx-2.mb-2 { width: inherit; margin-left: 0 !important; }
+    #value-form { width: 280px; }
+    footer { position: relative; }
+}
+@media only screen and (max-width: 425px) {
+    #value-form { width: 320px; }
+}
+@media only screen and (max-width: 375px) {
+    #value-form { width: 270px; }
+}
+@media only screen and (max-width: 320px) {
+    #value-form { width: 215px; }
+}
