@@ -180,7 +180,7 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
     }
 });
 
-currentDate = document.getElementById('lastUpdate');
+currentDate = lastUpdate;
 document.getElementById('dayFirst').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var first = Object.keys(dataHistory[currentType])[0];
