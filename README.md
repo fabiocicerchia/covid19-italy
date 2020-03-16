@@ -6,17 +6,22 @@
 **What's COVID-19?**
 
 > Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2
-(SARS-CoV-2),[9] a virus closely related to the SARS virus.
+> (SARS-CoV-2). The disease was first identified in 2019 in Wuhan, China, and has spread globally, resulting in the 2019–20
+> coronavirus pandemic. Common symptoms include fever, cough and shortness of breath. Muscle pain, sputum production and sore
+> throat are less common symptoms.
 > https://en.wikipedia.org/wiki/Coronavirus_disease_2019
 
 **How can I help prevent the spreading?**
 
 Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
-spreading even more is: **STAYING AT HOME**.
+spreading even more is: **[#StayTheFuckHome](https://covid19.fabiocicerchia.it/)**.
 
 This is not an official source so please do get informed with your local authorities in regards to what measures have
 been put in place to contain the virus. More details on the
 [Coronavirus disease (COVID-19) outbreak](https://www.who.int/emergencies/diseases/novel-coronavirus-2019).
+
+**Want lots of charts?**
+[Coronavirus Italia - Google Data Studio](https://datastudio.google.com/reporting/91350339-2c97-49b5-92b8-965996530f00) by [FMossotto](https://twitter.com/FMossotto).
 
 This repo is based on the official data released by the [Protezione Civile](https://github.com/pcm-dpc) under the
 [CC-BY-4.0 license](https://github.com/pcm-dpc/COVID-19/blob/master/LICENSE) and the geography data by
