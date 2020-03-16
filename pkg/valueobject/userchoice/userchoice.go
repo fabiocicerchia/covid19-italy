@@ -1,38 +1,38 @@
 package userchoice
 
 import (
-    "fmt"
+	"fmt"
 )
 
 type UserChoice struct {
-    SelectedType string
-    SelectedValue string
+	SelectedType  string
+	SelectedValue string
 }
 
 type error interface {
-    Error() string
+	Error() string
 }
 
 func New(selectedType string, selectedValue string) (*UserChoice, error) {
-    if (selectedType != "province" && selectedType == "region") {
-        return nil, fmt.Errorf("The type \"%s\" is not a valid type", selectedType)
-    }
-    if (selectedValue == "") {
-        return nil, fmt.Errorf("The value cannot be empty")
-    }
+	obj := new(UserChoice)
 
-    obj := &UserChoice {
-        SelectedType: selectedType,
-        SelectedValue: selectedValue,
-    }
+	if selectedType != "province" && selectedType == "region" {
+		return obj, fmt.Errorf("The type \"%s\" is not a valid type", selectedType)
+	}
+	if selectedValue == "" {
+		return obj, fmt.Errorf("The value cannot be empty")
+	}
 
-    return obj, nil
+	obj.SelectedType = selectedType
+	obj.SelectedValue = selectedValue
+
+	return obj, nil
 }
 
 func (u UserChoice) GetSelectedType() string {
-    return u.SelectedType
+	return u.SelectedType
 }
 
 func (u UserChoice) GetSelectedValue() string {
-    return u.SelectedValue;
+	return u.SelectedValue
 }

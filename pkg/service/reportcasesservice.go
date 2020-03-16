@@ -1,66 +1,65 @@
 package reportcasesservice
 
 import (
-  "strings"
-  "strconv"
+	"strconv"
+	"strings"
 
-  userchoice "cli/pkg/valueobject/userchoice"
-  csv "cli/pkg/valueobject/csv"
+	csv "cli/pkg/valueobject/csv"
+	userchoice "cli/pkg/valueobject/userchoice"
 )
 
 type ReportCasesService struct {
-    file []*csv.BaseRow
-    lastDays int
-    userChoice userchoice.UserChoice
-    data map[string]int
+	file       []*csv.BaseRow
+	lastDays   int
+	userChoice userchoice.UserChoice
+	data       map[string]uint32
 }
 
-func New(csv []*csv.BaseRow, userChoice userchoice.UserChoice, lastDays int) *ReportCasesService {
-    obj := ReportCasesService{}
+func New(csv []*csv.BaseRow, userChoice userchoice.UserChoice, lastDays int) (obj *ReportCasesService) {
+	obj = new(ReportCasesService)
 
-    obj.file       = csv
-    obj.userChoice = userChoice
-    obj.lastDays   = lastDays
+	obj.file = csv
+	obj.userChoice = userChoice
+	obj.lastDays = lastDays
 
-    return &obj
+	return obj
 }
 
-func (s ReportCasesService) reverse(data []*csv.BaseRow) []*csv.BaseRow {
-    for i := 0; i < len(data) / 2; i++ {
-        j := len(data) - i - 1
-        data[i], data[j] = data[j], data[i]
-    }
-
-    return data
+func (s ReportCasesService) reverse(data []*csv.BaseRow) {
+	for i := 0; i < len(data)/2; i++ {
+		j := len(data) - i - 1
+		data[i], data[j] = data[j], data[i]
+	}
 }
 
 func (s *ReportCasesService) ProcessData() {
-    // the file is sorted by date ascending, we need it descending
-    // TODO: move it somewhere else
-    csvData := s.reverse(s.file)
+	// the file is sorted by date ascending, we need it descending
+	// TODO: move it somewhere else
+	csvData := s.file
+	s.reverse(csvData)
 
-    data := make(map[string]int)
+	data := make(map[string]uint32)
 
-    countDays := 0
-    for _, record := range csvData {
-        if (strings.ToLower(record.Item) == strings.ToLower(s.userChoice.GetSelectedValue())) {
-            cases, _ := strconv.Atoi(record.Cases)
-            data[record.Data] = cases
+	countDays := 0
+	for _, record := range csvData {
+		if strings.ToLower(record.Item) == strings.ToLower(s.userChoice.GetSelectedValue()) {
+			cases, _ := strconv.Atoi(record.Cases)
+			data[record.Data] = uint32(cases)
 
-            countDays++
-            if (countDays == s.lastDays) {
-                break
-            }
-        }
-    }
+			countDays++
+			if countDays == s.lastDays {
+				break
+			}
+		}
+	}
 
-    s.data = data;
+	s.data = data
 }
 
-func (s *ReportCasesService) GetData() map[string]int {
-    return s.data;
+func (s ReportCasesService) GetData() map[string]uint32 {
+	return s.data
 }
 
-func (s *ReportCasesService) GetUserChoice() userchoice.UserChoice {
-    return s.userChoice;
+func (s ReportCasesService) GetUserChoice() userchoice.UserChoice {
+	return s.userChoice
 }

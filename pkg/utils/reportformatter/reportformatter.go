@@ -1,40 +1,57 @@
 package reportformatter
 
 import (
-    "fmt"
-    "sort"
-    "strings"
-    "strconv"
+	"fmt"
+	"sort"
+	"strconv"
+	"strings"
 )
 
-func Output(choice string, data map[string]int) {
-    fmt.Printf("COVID-19 TOTAL CASES IN %s\n", strings.ToUpper(choice));
+func Output(choice string, data map[string]uint32) {
+	fmt.Printf("COVID-19 TOTAL CASES IN %s\n", strings.ToUpper(choice))
 
-    if (len(data) == 0) {
-        fmt.Print("No cases found\n")
-        return
-    }
+	if len(data) == 0 {
+		fmt.Print("No cases found\n")
+		return
+	}
 
-    max := 0
-    keys := make([]string, 0, len(data))
-    for k, v := range data {
-	keys = append(keys, k)
-        if (v > max) { max = v }
-    }
-    sort.Strings(keys)
-    maxPadding := strconv.Itoa(len(strconv.Itoa(max)))
+	keys := sortedKeys(data)
 
-    perc := 0
-    previous := 0
-    for _, dataora := range keys {
-        casi := data[dataora]
-        data := string(dataora[0:10])
-        fmt.Printf("%s: %" + maxPadding + "d", data, casi);
-        if (previous > 0) {
-            perc = (100 / previous * casi) - 100
-            fmt.Printf(" -> %+4d%%", perc);
-        }
-        fmt.Print("\n")
-        previous = casi
-    }
+	max := calculateMax(data)
+	maxPadding := strconv.Itoa(len(strconv.Itoa(int(max))))
+
+	var perc uint32 = 0
+	var previous uint32 = 0
+	for _, dataora := range keys {
+		casi := data[dataora]
+		data := string(dataora[0:10])
+		fmt.Printf("%s: %"+maxPadding+"d", data, casi)
+		if previous > 0 {
+			perc = (100 / previous * casi) - 100
+			fmt.Printf(" -> %+4d%%", perc)
+		}
+		fmt.Print("\n")
+		previous = casi
+	}
+}
+
+func calculateMax(data map[string]uint32) uint32 {
+	var max uint32 = 0
+	for _, v := range data {
+		if v > max {
+			max = v
+		}
+	}
+
+	return max
+}
+
+func sortedKeys(data map[string]uint32) []string {
+	keys := make([]string, 0, len(data))
+	for k, _ := range data {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	return keys
 }

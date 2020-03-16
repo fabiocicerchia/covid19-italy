@@ -1,39 +1,48 @@
 package reportfactory
 
 import (
-  "strconv"
-  "os"
+	"os"
+	"strconv"
 
-  "github.com/gocarina/gocsv"
+	"github.com/gocarina/gocsv"
 
-  userchoice "cli/pkg/valueobject/userchoice"
-  csv "cli/pkg/valueobject/csv"
-  reportcasesservice "cli/pkg/service"
+	reportcasesservice "cli/pkg/service"
+	csv "cli/pkg/valueobject/csv"
+	userchoice "cli/pkg/valueobject/userchoice"
 )
 
 func Create(options map[string]string) *reportcasesservice.ReportCasesService {
-    // TODO: Move elsewhere
-    currPath, _ := os.Getwd()
-    csvFileName := currPath + options["file"]
+	// TODO: Move elsewhere
+	currPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	csvFileName := currPath + options["file"]
 
-    csvFile, _:= os.OpenFile(csvFileName, os.O_RDONLY, os.ModePerm)
-    defer csvFile.Close()
+	csvFile, err := os.OpenFile(csvFileName, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	defer csvFile.Close()
 
-    rows := []*csv.BaseRow{}
+	rows := []*csv.BaseRow{}
 
-    gocsv.UnmarshalFile(csvFile, &rows)
+	gocsv.UnmarshalFile(csvFile, &rows)
 
-    // TODO: handle all the errors
-    choice, err := userchoice.New(options["type"], options["userChoice"])
-    if (err != nil) {
-        panic(err)
-    }
-    lastDays, _ := strconv.Atoi(options["lastDays"])
-    service := reportcasesservice.New(
-        rows,
-        *choice,
-        lastDays,
-    )
+	// TODO: handle all the errors
+	choice, err := userchoice.New(options["type"], options["userChoice"])
+	if err != nil {
+		panic(err)
+	}
+	lastDays, err := strconv.Atoi(options["lastDays"])
+	if err != nil {
+		panic(err)
+	}
+	service := reportcasesservice.New(
+		rows,
+		*choice,
+		lastDays,
+	)
 
-    return service
+	return service
 }
