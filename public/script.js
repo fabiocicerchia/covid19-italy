@@ -92,13 +92,18 @@ function paintMap(type, data, lastUpdateDate) {
                var cases = data[place].total;
                var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
                popupContent += 'Cases: ' + cases + '<br>';
+               if (type === 'region') {
+                   popupContent += 'Recovered: ' + data[place].recovered + '<br>';
+                   popupContent += 'Deaths: ' + data[place].death + '<br>';
+                   popupContent += 'Mortality Rate: ' + (100 / cases * data[place].death).toFixed(0)  + '%<br>';
+               }
                popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
-	       if (place === 'p.a. trento') {
+               if (place === 'p.a. trento') {
                    popupContent += '<br><strong>P.A. Bolzano</strong><br>';
                    popupContent += 'Cases: ' + data['p.a. bolzano'].total + '<br>';
                    popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
-	       }
+               }
                layer.bindPopup(popupContent);
            }
         })
@@ -148,9 +153,9 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
             if (item.data !== "") {
                 var parsedDate = item.data.substr(0, 10);
                 if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
-	        province = normalisePlace(item.denominazione_provincia);
+                province = normalisePlace(item.denominazione_provincia);
                 dataHistory['province'][parsedDate][province] = { total: parseInt(item.totale_casi, 10) };
-	    }
+        }
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate = dataHistory['province'][today] ? today : yesterday;
@@ -172,25 +177,27 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
             if (typeof dataHistory['region'][parsedDate] === 'undefined') dataHistory['region'][parsedDate] = {};
-	    region = normalisePlace(item.denominazione_regione);
+            region = normalisePlace(item.denominazione_regione);
             dataHistory['region'][parsedDate][region] = {
                 total: parseInt(item.totale_casi, 10),
-		hospitalised: parseInt(item.ricoverati_con_sintomi, 10),
-		icu: parseInt(item.terapia_intensiva, 10),
-		home: parseInt(item.isolamento_domiciliare, 10),
-		total_active: parseInt(item.totale_attualmente_positivi, 10),
-		new_active: parseInt(item.nuovi_attualmente_positivi, 10),
-		recovered: parseInt(item.dimessi_guariti, 10),
-		death: parseInt(item.deceduti, 10),
-		tests: parseInt(item.tamponi, 10),
-	    };
+                hospitalised: parseInt(item.ricoverati_con_sintomi, 10),
+                icu: parseInt(item.terapia_intensiva, 10),
+                home: parseInt(item.isolamento_domiciliare, 10),
+                total_active: parseInt(item.totale_attualmente_positivi, 10),
+                new_active: parseInt(item.nuovi_attualmente_positivi, 10),
+                recovered: parseInt(item.dimessi_guariti, 10),
+                death: parseInt(item.deceduti, 10),
+                tests: parseInt(item.tamponi, 10),
+            };
         });
         var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
         var recovered = Object.values(dataRegion).map((i) => i.recovered).reduce((a, b) => a + b, 0);
         var active = Object.values(dataRegion).map((i) => i.total_active).reduce((a, b) => a + b, 0);
         var deaths  = Object.values(dataRegion).map((i) => i.death).reduce((a, b) => a + b, 0);
+        var sumCases = Object.values(dataRegion).map((i) => i.total).reduce((a, b) => a + b, 0);
         document.getElementById('num_active').innerHTML = active.toLocaleString();
         document.getElementById('num_death').innerHTML = deaths.toLocaleString();
+        document.getElementById('num_death_rate').innerHTML = (100 / sumCases * deaths).toFixed(0) + '%';
         document.getElementById('num_recover').innerHTML = recovered.toLocaleString();
     }
 });
