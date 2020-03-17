@@ -36,19 +36,32 @@ This repo is based on the official data released by the [Protezione Civile](http
 ## Install
 
 ```
-$ ./setup.sh
+$ ./bin/setup.sh
 ```
 
 ## Run
 
 ```
-$ ./bin/trend --help
-COVID-19 ITALY - TRENDS
- ./bin/trend [--province x|--region y] [--last-week|--last-month]
+$ go run main.go --help
+NAME:
+   covid19-trend - COVID-19 ITALY - TRENDS
+
+USAGE:
+   main [global options] command [command options] [arguments...]
+
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --region value    Show the trends for the selected region
+   --province value  Show the trends for the selected province
+   --last-week       Show the trends for the last week (default: false)
+   --last-month      Show the trends for the last month (default: false)
+   --help, -h        show help (default: false)
 ```
 
 ```
-$ ./bin/trend --province roma
+$ go run main.go --province roma
 COVID-19 TOTAL CASES IN ROMA
 2020-02-24:  0
 2020-02-25:  3
@@ -69,7 +82,7 @@ COVID-19 TOTAL CASES IN ROMA
 ```
 
 ```
-$ ./bin/trend --region lazio
+$ go run main.go --region lazio
 COVID-19 TOTAL CASES IN LAZIO
 2020-02-24:   3
 2020-02-25:   3 ->   +0%
@@ -92,7 +105,7 @@ COVID-19 TOTAL CASES IN LAZIO
 ## Run web interface
 
 ```
-$ php -S 127.0.0.1:8001 -t public
+$ php -S 127.0.0.1:8001 -t web
 ```
 
 Then you can browse application on `http://127.0.0.1:8001/` (you can use a different port, if you prefer)

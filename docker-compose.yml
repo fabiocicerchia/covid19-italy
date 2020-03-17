@@ -8,4 +8,4 @@ services:
     volumes:
       - .:/usr/local/go/src/cli
     working_dir: /usr/local/go/src/cli
-    command: sh start.sh
+    command: sh ./bin/start.sh
