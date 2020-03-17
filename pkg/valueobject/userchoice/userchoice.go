@@ -16,7 +16,7 @@ type error interface {
 func New(selectedType string, selectedValue string) (*UserChoice, error) {
 	obj := new(UserChoice)
 
-	if selectedType != "province" && selectedType == "region" {
+	if selectedType != "province" && selectedType != "region" {
 		return obj, fmt.Errorf("The type \"%s\" is not a valid type", selectedType)
 	}
 	if selectedValue == "" {

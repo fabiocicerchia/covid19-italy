@@ -32,7 +32,7 @@ func Config() cli.App {
 		},
 		Action: func(c *cli.Context) error {
 			o := new(getoptshandler.GetoptsHandler)
-			err := o.HandleOptions(*c)
+			err := o.HandleOptions(c.String("region"), c.String("province"), c.Bool("last-month"), c.Bool("last-week"))
 			if err != nil {
 				panic(err)
 			}

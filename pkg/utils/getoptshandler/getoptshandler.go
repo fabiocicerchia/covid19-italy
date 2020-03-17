@@ -3,8 +3,6 @@ package getoptshandler
 import (
 	"fmt"
 	"strings"
-
-	"github.com/urfave/cli/v2"
 )
 
 type GetoptsHandler struct {
@@ -15,16 +13,14 @@ type error interface {
 	Error() string
 }
 
-func (o *GetoptsHandler) HandleOptions(c cli.Context) error {
-	region := c.String("region")
-	province := c.String("province")
 
+func (o *GetoptsHandler) HandleOptions(region string, province string , lastMonth bool, lastWeek bool) error {
 	o.options = make(map[string]string)
 
 	o.options["lastDays"] = "0"
-	if c.Bool("last-month") {
+	if lastMonth == true {
 		o.options["lastDays"] = "31"
-	} else if c.Bool("last-week") {
+	} else if lastWeek == true {
 		o.options["lastDays"] = "7"
 	}
 
@@ -51,13 +47,13 @@ func (o GetoptsHandler) handlePlace(selectedType string, selectedValue string) e
 
 func (o *GetoptsHandler) showRegion(name string) {
 	o.options["file"] = "/data/pcm-dpc/dati-regioni/dpc-covid19-ita-regioni.csv"
-	o.options["type"] = "regione"
+	o.options["type"] = "region"
 	o.options["userChoice"] = strings.ToLower(name)
 }
 
 func (o *GetoptsHandler) showProvince(name string) {
 	o.options["file"] = "/data/pcm-dpc/dati-province/dpc-covid19-ita-province.csv"
-	o.options["type"] = "provincia"
+	o.options["type"] = "province"
 	o.options["userChoice"] = strings.ToLower(name)
 }
 

@@ -20,14 +20,14 @@ func Output(choice string, data map[string]uint32) {
 	max := calculateMax(data)
 	maxPadding := strconv.Itoa(len(strconv.Itoa(int(max))))
 
-	var perc uint32 = 0
+	var perc int16 = 0
 	var previous uint32 = 0
 	for _, dataora := range keys {
-		casi := data[dataora]
+		casi := uint32(data[dataora])
 		data := string(dataora[0:10])
 		fmt.Printf("%s: %"+maxPadding+"d", data, casi)
 		if previous > 0 {
-			perc = (100 / previous * casi) - 100
+			perc = int16(100.0 / float32(previous) * float32(casi)) - 100
 			fmt.Printf(" -> %+4d%%", perc)
 		}
 		fmt.Print("\n")
