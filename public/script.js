@@ -237,3 +237,7 @@ document.getElementById('type-region').addEventListener('click', function() {
 document.getElementById('type-province').addEventListener('click', function() {
     paintMap('province', dataHistory['province'][lastUpdate], lastUpdate);
 });
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

@@ -15,7 +15,7 @@ footer {
 #dayLast {
     position: absolute;
     top: 1em;
-    z-index: 9999;
+    z-index: 999;
     height: 30px;
     width: 30px;
     color: black;
@@ -32,7 +32,7 @@ footer {
     position: absolute;
     background: white;
     top: 5em;
-    z-index: 9999;
+    z-index: 999;
     display: block;
     right: 2.5em;
     font-size: 0.6em;

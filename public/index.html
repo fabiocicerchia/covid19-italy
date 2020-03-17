@@ -70,10 +70,10 @@
                         <form action="/trend.php" method="post" id="search-form" target="results" class="form-inline">
                             <div class="form-group mb-2">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-info active" id="type-province">
+                                    <label class="btn btn-info active" id="type-province" data-toggle="tooltip" data-placement="top" title="Switch to Province view">
                                         <input type="radio" id="type-form-province" name="type" value="province" autocomplete="off" checked> Province
                                     </label>
-                                    <label class="btn btn-info" id="type-region">
+                                    <label class="btn btn-info" id="type-region" data-toggle="tooltip" data-placement="top" title="Switch to Region view">
                                         <input type="radio" id="type-form-region" name="type" value="region" autocomplete="off"> Region
                                     </label>
                                 </div>
@@ -88,10 +88,10 @@
                     <div class="col-sm-6 text-right p-0">
                         <div id="map"></div>
                         <div id="lastUpdate"></div>
-                        <input type="button" id="dayFirst" value="|<" />
-                        <input type="button" id="dayBefore" value="<<" />
-                        <input type="button" id="dayAfter" value=">>" />
-                        <input type="button" id="dayLast" value=">|" />
+                        <input type="button" id="dayFirst" value="|<" data-toggle="tooltip" data-placement="bottom" title="First day"/>
+                        <input type="button" id="dayBefore" value="<<" data-toggle="tooltip" data-placement="bottom" title="-1 day"/>
+                        <input type="button" id="dayAfter" value=">>" data-toggle="tooltip" data-placement="bottom" title="+1 day"/>
+                        <input type="button" id="dayLast" value=">|" data-toggle="tooltip" data-placement="bottom" title="Today"/>
                         <script src="/script.js"></script>
                     </div>
                 </div>
