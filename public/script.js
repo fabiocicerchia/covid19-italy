@@ -91,17 +91,17 @@ function paintMap(type, data, lastUpdateDate) {
                            : normalisePlace(feature.properties.prov_name);
                var cases = data[place].total;
                var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
-               popupContent += 'Cases: ' + cases + '<br>';
+               popupContent += 'Cases: ' + cases.toLocaleString() + '<br>';
                if (type === 'region') {
-                   popupContent += 'Recovered: ' + data[place].recovered + '<br>';
-                   popupContent += 'Deaths: ' + data[place].death + '<br>';
+                   popupContent += 'Recovered: ' + data[place].recovered.toLocaleString() + '<br>';
+                   popupContent += 'Deaths: ' + data[place].death.toLocaleString() + '<br>';
                    popupContent += 'Mortality Rate: ' + (100 / cases * data[place].death).toFixed(0)  + '%<br>';
                }
                popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
                if (place === 'p.a. trento') {
                    popupContent += '<br><strong>P.A. Bolzano</strong><br>';
-                   popupContent += 'Cases: ' + data['p.a. bolzano'].total + '<br>';
+                   popupContent += 'Cases: ' + data['p.a. bolzano'].total.toLocaleString() + '<br>';
                    popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
                }
                layer.bindPopup(popupContent);
@@ -199,6 +199,7 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         document.getElementById('num_death').innerHTML = deaths.toLocaleString();
         document.getElementById('num_death_rate').innerHTML = (100 / sumCases * deaths).toFixed(0) + '%';
         document.getElementById('num_recover').innerHTML = recovered.toLocaleString();
+        document.getElementById('num_recover_rate').innerHTML = (100 / sumCases * recovered).toFixed(0) + '%';
     }
 });
 

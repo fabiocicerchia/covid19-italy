@@ -20,7 +20,7 @@
                     <a href="/" class="navbar-brand">
                         <h1 class="small float-left m-0 font-weight-bold">COVID-19 Spreading in Italy</h1>
                     </a>
-                    <span class="float-right d-block btn btn-light py-0 py-sm-1 px-1 px-sm-1">Total Cases: <span class="badge badge-warning" id="totalCases">-</span></span>
+                    <span class="float-right d-block btn btn-sm btn-light py-0 py-sm-1 px-1 px-sm-1">Total Cases: <span class="badge badge-danger" id="totalCases">-</span></span>
                 </div>
             </div>
         </header>
@@ -32,18 +32,18 @@
                         <div class="alert alert-dark small p-3 mb-2 alert-dismissible" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
-                            <p><strong>What's COVID-19?</strong></p>
-                            <blockquote cite="https://en.wikipedia.org/wiki/Coronavirus_disease_2019">
+                            <p class="mb-1"><strong>What's COVID-19?</strong></p>
+                            <blockquote class="mb-1" cite="https://en.wikipedia.org/wiki/Coronavirus_disease_2019">
                                 Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe acute respiratory syndrome coronavirus 2
                                 (SARS-CoV-2). The disease was first identified in 2019 in Wuhan, China, and has spread globally, resulting in the 2019–20
                                 coronavirus pandemic. Common symptoms include fever, cough and shortness of breath. Muscle pain, sputum production and sore
                                 throat are less common symptoms.
                             </blockquote>
-                            <p><strong>How can I help prevent the spreading?</strong></p>
-                            <p>Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
+                            <p class="mb-1"><strong>How can I help prevent the spreading?</strong></p>
+                            <p class="mb-1">Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
                             spreading even more is: <a href="https://staythefuckhome.com/" target="_blank" class="font-weight-bold">#StayTheFuckHome</a>.</p>
 			    <hr>
-                            <p>This is not an official source so please do get informed with your local authorities in regards to what measures have
+                            <p class="mb-0">This is not an official source so please do get informed with your local authorities in regards to what measures have
                             been put in place to contain the virus. More details on the
                             <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019" target="_blank">Coronavirus disease (COVID-19) outbreak</a>.</p>
                         </div>
@@ -59,10 +59,10 @@
                                 <div class="alert alert-danger small px-2" role="alert">Actual Cases <strong id="num_active"></strong></div>
                             </div>
                             <div class="col-3 px-1">
-                                <div class="alert alert-success small px-2" role="alert">Recovered <strong id="num_recover"></strong></div>
+                                <div class="alert alert-success small px-2" role="alert">Recovered <strong id="num_recover"></strong> (<strong id="num_recover_rate"></strong>)</div>
                             </div>
                             <div class="col-3 px-1 pr-3">
-				 <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong><br>Rate <strong id="num_death_rate"></strong></div>
+				 <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong> (<strong id="num_death_rate"></strong>)</div>
                             </div>
                         </div>
                         <p>Use the following form to look for a region or a province in Italy:</p>
@@ -102,7 +102,8 @@
                 <div class="col-12 col-sm-8 col-lg-12">
                     <small class="text-muted">
                         &copy; 2020 Fabio Cicerchia.
-                        <a href="https://github.com/fabiocicerchia/covid19-italy" target="_blank">OpenSource Project</a> |
+                        <a href="https://github.com/fabiocicerchia/covid19-italy" target="_blank" title="Hosted on GitHub">
+                            <svg class="octicon octicon-mark-github v-align-middle" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a> |
                         Official Data by <a href="https://github.com/pcm-dpc">Protezione Civile (CC-BY-4.0)</a>.
                     </small>
                 </div>

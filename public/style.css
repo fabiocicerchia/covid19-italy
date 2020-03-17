@@ -9,6 +9,7 @@ footer {
     position: absolute;
     bottom: 0.5em;
 }
+footer a svg { margin-top: -5px; }
 #dayFirst,
 #dayBefore,
 #dayAfter,
