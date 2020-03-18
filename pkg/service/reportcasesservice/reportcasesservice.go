@@ -9,7 +9,7 @@ import (
 )
 
 type ReportCasesService struct {
-	file       []*csv.BaseRow
+	csv        []*csv.BaseRow
 	lastDays   int
 	userChoice userchoice.UserChoice
 	data       map[string]uint32
@@ -18,25 +18,15 @@ type ReportCasesService struct {
 func New(csv []*csv.BaseRow, userChoice userchoice.UserChoice, lastDays int) (obj *ReportCasesService) {
 	obj = new(ReportCasesService)
 
-	obj.file = csv
+	obj.csv = csv
 	obj.userChoice = userChoice
 	obj.lastDays = lastDays
 
 	return obj
 }
 
-func (s ReportCasesService) reverse(data []*csv.BaseRow) {
-	for i := 0; i < len(data)/2; i++ {
-		j := len(data) - i - 1
-		data[i], data[j] = data[j], data[i]
-	}
-}
-
 func (s *ReportCasesService) ProcessData() {
-	// the file is sorted by date ascending, we need it descending
-	// TODO: move it somewhere else
-	csvData := s.file
-	s.reverse(csvData)
+	csvData := s.csv
 
 	data := make(map[string]uint32)
 

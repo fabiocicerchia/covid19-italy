@@ -1,9 +1,11 @@
 package clisetup
 
 import (
+	"strconv"
+
 	"github.com/urfave/cli/v2"
 
-	reportfactory "cli/pkg/factory"
+	reportfactory "cli/pkg/factory/reportfactory"
 	getoptshandler "cli/pkg/utils/getoptshandler"
 	reportformatter "cli/pkg/utils/reportformatter"
 )
@@ -37,7 +39,9 @@ func Config() cli.App {
 				panic(err)
 			}
 
-			service := reportfactory.Create(o.GetOptions())
+			options := o.GetOptions()
+			lastDays, _ := strconv.Atoi(options["lastDays"])
+			service := reportfactory.Create(options["file"], options["type"], options["userChoice"], lastDays)
 			service.ProcessData()
 
 			reportformatter.Output(service.GetUserChoice().GetSelectedValue(), service.GetData())
