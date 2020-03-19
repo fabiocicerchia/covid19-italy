@@ -36,6 +36,7 @@ footer a svg { margin-top: -5px; }
     text-transform: capitalize;
 }
 
+#dayPlay,
 #dayFirst,
 #dayBefore,
 #dayAfter,
@@ -50,6 +51,7 @@ footer a svg { margin-top: -5px; }
     font-size: 0.6em;
     float: right;
 }
+#dayPlay { right: 18em; }
 #dayFirst { right: 14em; }
 #dayBefore { right: 10em; }
 #dayAfter { right: 6em; }

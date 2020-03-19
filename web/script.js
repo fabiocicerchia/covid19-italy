@@ -221,6 +221,13 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
     }
 });
 
+playInterval = undefined;
+document.getElementById('dayPlay').addEventListener('click', function() {
+    document.getElementById('dayFirst').dispatchEvent(new MouseEvent('click', {}));
+    playInterval = setInterval(function() {
+        document.getElementById('dayAfter').dispatchEvent(new MouseEvent('click', {}));
+    }, 700);
+});
 document.getElementById('dayFirst').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var first = Object.keys(dataHistory[currentType])[0];
@@ -248,6 +255,9 @@ document.getElementById('dayAfter').addEventListener('click', function() {
         lastUpdate = after;
 
         paintMap(currentType, dataHistory[currentType][after], after);
+    } else {
+        // stop the play, even if didn't start
+        playInterval = undefined;
     }
 });
 document.getElementById('dayLast').addEventListener('click', function() {
