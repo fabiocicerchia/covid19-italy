@@ -1,15 +1,41 @@
+/* GENERIC */
 html, body {
     height: 100%;
     margin: 0;
 }
-#map {
-    height: 700px;
+
+a {
+    cursor: pointer;
 }
+
+/* HEADER */
+.navbar {
+    background-color: #117a8b;
+}
+
+/* FOOTER */
 footer {
     position: absolute;
     bottom: 0.5em;
 }
 footer a svg { margin-top: -5px; }
+
+/* RESULTS */
+#results {
+    width: 100%;
+    max-height: 400px;
+    border: 0;
+}
+
+/* MAP */
+#map {
+    height: 700px;
+}
+
+.leaflet-popup-content strong {
+    text-transform: capitalize;
+}
+
 #dayFirst,
 #dayBefore,
 #dayAfter,
@@ -40,24 +66,21 @@ footer a svg { margin-top: -5px; }
     padding: 0.5em;
 }
 
-#results {
+#loader {
+    background-color: grey;
+    opacity: 0.5;
     width: 100%;
-    max-height: 400px;
-    border: 0;
+    height: 100%;
+    z-index: 999999;
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding-top: 50%;
+    font-size: 2em;
 }
 
-.leaflet-popup-content strong {
-    text-transform: capitalize;
-}
-
-.navbar {
-    background-color: #117a8b;
-}
-
-a {
-    cursor: pointer;
-}
-
+/* MEDIA QUERIES */
 @media only screen and (max-width: 768px) {
     #search-form .form-group.mb-2 { width: 100%; }
     #search-form .form-group.mx-2.mb-2 { width: inherit; margin-left: 0 !important; }

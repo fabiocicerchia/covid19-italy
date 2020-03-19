@@ -31,6 +31,7 @@ This repo is based on the official data released by the [Protezione Civile](http
 
 ## Requirements
 
+ - GO 1.14
  - PHP 7.0+
 
 ## Install

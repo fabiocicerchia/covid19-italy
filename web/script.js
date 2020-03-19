@@ -59,15 +59,30 @@ function normalisePlace(place) {
     return lowerPlace;
 }
 
-function paintMap(type, data, lastUpdateDate) {
-    document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
-    var max = Math.max.apply(Math, Object.values(data).map((i) => i.total));
+geojsonCache = {region: undefined, province: undefined};
 
-    var endpoint = type === 'region'
+function fetchGeojson(type, callback) {
+    if (geojsonCache[type] === undefined) {
+        var endpoint = type === 'region'
                    ? '/limits_IT_regions.geojson'
                    : '/limits_IT_provinces.geojson';
 
-    fetchJSONFile(endpoint, function(items) {
+        fetchJSONFile(endpoint, function(items) {
+            geojsonCache[type] = items;
+            callback(items);
+        });
+        return;
+    }
+
+    callback(geojsonCache[type]);
+}
+
+function paintMap(type, data, lastUpdateDate) {
+    document.getElementById('loader').classList.remove('d-none');
+    document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
+    var max = Math.max.apply(Math, Object.values(data).map((i) => i.total));
+
+    fetchGeojson(type, function (items) {
         if (geoLayer !== undefined) {
             geoLayer.remove();
         }
@@ -84,37 +99,40 @@ function paintMap(type, data, lastUpdateDate) {
                        color: heatMapColorforValue(Math.min(cases / max + 0.75, 1))
                    };
                }
-           },
-           onEachFeature: function(feature, layer) {
-               var place = type === 'region'
+            },
+            onEachFeature: function(feature, layer) {
+                var place = type === 'region'
                            ? normalisePlace(feature.properties.reg_name)
                            : normalisePlace(feature.properties.prov_name);
-               var cases = data[place].total;
-               var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
-               popupContent += 'Cases: ' + cases.toLocaleString() + '<br>';
-               if (type === 'region') {
+                var cases = data[place].total;
+                var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
+                popupContent += 'Cases: ' + cases.toLocaleString() + '<br>';
+                if (type === 'region') {
                    popupContent += 'Recovered: ' + data[place].recovered.toLocaleString() + '<br>';
                    popupContent += 'Deaths: ' + data[place].death.toLocaleString() + '<br>';
                    popupContent += 'Mortality Rate: ' + (100 / cases * data[place].death).toFixed(0)  + '%<br>';
-               }
-               popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
+                }
+                popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
-               if (place === 'p.a. trento') {
+                if (place === 'p.a. trento') {
                    popupContent += '<br><strong>P.A. Bolzano</strong><br>';
                    popupContent += 'Cases: ' + data['p.a. bolzano'].total.toLocaleString() + '<br>';
                    popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
-               }
-               layer.bindPopup(popupContent);
+                }
+                layer.bindPopup(popupContent);
            }
         })
-        .addTo(map)
+        .on('add', function () {
+            document.getElementById('loader').classList.add('d-none');
+        })
         .on('click', function(e) {
             document.getElementById('type-form-' + type).checked = true
             document.getElementById('value-form').value = type === 'region'
                     ? normalisePlace(e.sourceTarget.feature.properties.reg_name)
                     : normalisePlace(e.sourceTarget.feature.properties.prov_name);
             document.getElementById('search-form').submit();
-        });
+        })
+        .addTo(map);
     });
 }
 
@@ -248,4 +266,4 @@ document.getElementById('type-province').addEventListener('click', function() {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
-})
+});

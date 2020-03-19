@@ -42,7 +42,7 @@
                             <p class="mb-1"><strong>How can I help prevent the spreading?</strong></p>
                             <p class="mb-1">Since the virus is quite aggressive and the contamination trends are exponential, the recommended way to prevent from
                             spreading even more is: <a href="https://staythefuckhome.com/" target="_blank" class="font-weight-bold">#StayTheFuckHome</a>.</p>
-			    <hr>
+                            <hr>
                             <p class="mb-0">This is not an official source so please do get informed with your local authorities in regards to what measures have
                             been put in place to contain the virus. More details on the
                             <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019" target="_blank">Coronavirus disease (COVID-19) outbreak</a>.</p>
@@ -62,7 +62,7 @@
                                 <div class="alert alert-success small px-2" role="alert">Recovered <strong id="num_recover"></strong> (<strong id="num_recover_rate"></strong>)</div>
                             </div>
                             <div class="col-3 px-1 pr-3">
-				 <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong> (<strong id="num_death_rate"></strong>)</div>
+                                <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong> (<strong id="num_death_rate"></strong>)</div>
                             </div>
                         </div>
                         <p>Use the following form to look for a region or a province in Italy:</p>
@@ -86,12 +86,14 @@
                         <iframe id="results" name="results" src=""></iframe>
                     </div>
                     <div class="col-sm-6 text-right p-0">
-                        <div id="map"></div>
-                        <div id="lastUpdate"></div>
-                        <input type="button" id="dayFirst" value="|<" data-toggle="tooltip" data-placement="bottom" title="First day"/>
-                        <input type="button" id="dayBefore" value="<<" data-toggle="tooltip" data-placement="bottom" title="-1 day"/>
-                        <input type="button" id="dayAfter" value=">>" data-toggle="tooltip" data-placement="bottom" title="+1 day"/>
-                        <input type="button" id="dayLast" value=">|" data-toggle="tooltip" data-placement="bottom" title="Today"/>
+                        <div id="map">
+                            <div id="loader">LOADING...</div>
+                            <div id="lastUpdate"></div>
+                            <input type="button" id="dayFirst" value="|<" data-toggle="tooltip" data-placement="bottom" title="First day"/>
+                            <input type="button" id="dayBefore" value="<<" data-toggle="tooltip" data-placement="bottom" title="-1 day"/>
+                            <input type="button" id="dayAfter" value=">>" data-toggle="tooltip" data-placement="bottom" title="+1 day"/>
+                            <input type="button" id="dayLast" value=">|" data-toggle="tooltip" data-placement="bottom" title="Today"/>
+                        </div>
                         <script src="/script.js"></script>
                     </div>
                 </div>
