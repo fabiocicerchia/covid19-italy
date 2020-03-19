@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/local/go/src/cli
+    working_dir: /usr/local/go/src/cli
+    #command: sh ./bin/start.sh
+    command: tail -f /dev/null
