@@ -42,7 +42,7 @@ $ ./bin/setup.sh
 ## Run
 
 ```
-$ go run main.go --help
+$ ./bin/covid19-trend --help
 NAME:
    covid19-trend - COVID-19 ITALY - TRENDS
 
@@ -61,7 +61,7 @@ GLOBAL OPTIONS:
 ```
 
 ```
-$ go run main.go --province roma
+$ ./bin/covid19-trend --province roma
 COVID-19 TOTAL CASES IN ROMA
 2020-02-24:  0
 2020-02-25:  3
@@ -82,7 +82,7 @@ COVID-19 TOTAL CASES IN ROMA
 ```
 
 ```
-$ go run main.go --region lazio
+$ ./bin/covid19-trend --region lazio
 COVID-19 TOTAL CASES IN LAZIO
 2020-02-24:   3
 2020-02-25:   3 ->   +0%
