@@ -47,7 +47,8 @@ func TestOutputWithNoData(t *testing.T) {
 		reportformatter.Output("roma", data)
 	})
 
-	expected := `COVID-19 TOTAL CASES IN ROMA
+	expected := `COVID-19 NEW CASES IN ROMA
+
 No cases found
 `
 
@@ -70,16 +71,19 @@ func TestOutputWithSomeData(t *testing.T) {
 		reportformatter.Output("roma", data)
 	})
 
-	expected := `COVID-19 TOTAL CASES IN ROMA
+	expected := `COVID-19 NEW CASES IN ROMA
+
 2020-03-10: 1
-2020-03-11: 2 -> +100% WORST INCREASE
-2020-03-12: 3 ->  +50%
-2020-03-13: 4 ->  +33% WORST PEAK
-2020-03-14: 4 ->   +0% WORST PEAK
-2020-03-15: 3 ->  -25%
-2020-03-16: 2 ->  -34%
-2020-03-17: 1 ->  -50%
-2020-03-18: 0 -> -100%
+2020-03-11: 1 -> +100% WORST INCREASE
+2020-03-12: 1 ->  +50%
+2020-03-13: 1 ->  +33% WORST PEAK
+2020-03-14: 0 ->   +0% WORST PEAK
+2020-03-15: -1 ->  -25%
+2020-03-16: -1 ->  -34%
+2020-03-17: -1 ->  -50%
+2020-03-18: -1 -> -100%
+
+TOTAL CASES: 0
 `
 
 	assert.Equal(t, actual, expected)
