@@ -25,6 +25,7 @@ footer a svg { margin-top: -5px; }
     border: 0;
     max-height: 400px;
     width: 100%;
+    overflow: visible;
 }
 
 .alert strong { font-size: 1.2em; }

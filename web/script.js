@@ -4,16 +4,22 @@ function heatMapColorforValue(value) {
     return "hsl(" + h + ", 100%, 50%)";
 }
 
-function fetchJSONFile(path, callback) {
+function xhrCall(path, callback) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function() {
         if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-            var data = JSON.parse(httpRequest.responseText);
-            if (callback) callback(data);
+            callback(httpRequest.responseText);
         }
     };
     httpRequest.open('GET', path);
     httpRequest.send();
+}
+
+function fetchJSONFile(path, callback) {
+    xhrCall(path, function (responseText) {
+        var data = JSON.parse(responseText);
+        if (callback) callback(data);
+    });
 }
 
 function switchRegion(el) {
@@ -106,7 +112,7 @@ function paintMap(type, data, previousData, lastUpdateDate) {
                            : normalisePlace(feature.properties.prov_name);
                 var cases = data[place].total;
                 var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
-                var trendIcon = previousData == undefined ? '' : (cases > previousData[place].total ? ' &#21e7;' : ' &#21e9;');
+                var trendIcon = previousData == undefined ? '' : (cases > previousData[place].total ? ' &uarr;' : ' &darr;');
                 popupContent += 'Cases: ' + cases.toLocaleString() + trendIcon + '<br>';
                 if (type === 'region') {
                    popupContent += 'Recovered: ' + data[place].recovered.toLocaleString() + '<br>';
@@ -116,7 +122,7 @@ function paintMap(type, data, previousData, lastUpdateDate) {
                 popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
                 if (place === 'p.a. trento') {
-                    trendIcon = previousData == undefined ? '' : (cases > previousData['p.a. bolzano'].total ? ' &#21e7;' : ' &#21e9;');
+                    trendIcon = previousData == undefined ? '' : (cases > previousData['p.a. bolzano'].total ? '&uarr;' : ' &darr;');
                     popupContent += '<br><strong>P.A. Bolzano</strong><br>';
                     popupContent += 'Cases: ' + data['p.a. bolzano'].total.toLocaleString() + trendIcon +'<br>';
                     popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
@@ -132,18 +138,27 @@ function paintMap(type, data, previousData, lastUpdateDate) {
             document.getElementById('value-form').value = type === 'region'
                     ? normalisePlace(e.sourceTarget.feature.properties.reg_name)
                     : normalisePlace(e.sourceTarget.feature.properties.prov_name);
-            document.getElementById('search-form').submit();
+            lookup();
         })
         .addTo(map);
     });
 }
 
 // SEARCH FORM
-document.getElementById('search-form').onsubmit = function(e) {
+function lookup() {
     var valueField = document.getElementById('value-form');
     valueField.value = valueField.value ? normalisePlace(valueField.value) : '';
     var currentType = document.querySelector('input[name="type"]:checked').value;
     paintMap(currentType, getDataPoint(currentType, lastUpdate), getDataPoint(currentType, calcDateBefore(lastUpdate)), lastUpdate);
+
+    xhrCall('/trend.php?type=' + currentType + '&value=' + valueField.value, function (responseText) {
+        document.getElementById('results').innerHTML = responseText;
+    });
+};
+
+document.getElementById('search-form').onsubmit = function(e) {
+    e.preventDefault();
+    lookup();
 };
 
 // COVID DATA
@@ -176,7 +191,7 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
                 province = normalisePlace(item.denominazione_provincia);
                 if (typeof dataHistory['province'][parsedDate][province] !== "undefined") dataHistory['province'][parsedDate][province].total += parseInt(item.totale_casi, 10);
                 else dataHistory['province'][parsedDate][province] = { total: parseInt(item.totale_casi, 10) };
-        }
+            }
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate = dataHistory['province'][today] ? today : yesterday;

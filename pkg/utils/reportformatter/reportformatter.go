@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func Output(choice string, data map[string]uint32) {
@@ -24,20 +26,27 @@ func Output(choice string, data map[string]uint32) {
 	var perc int16 = 0
 	var previous uint32 = 0
 	var sumCases uint32 = 0
+	fmt.Print("DATE\t\tNEW_CASES\tTOTAL_CASES\t% INCREASE\n")
+
 	for _, dataora := range keys {
 		casi := uint32(data[dataora])
 		sumCases = casi
 		data := string(dataora[0:10])
-		fmt.Printf("%s: %"+maxPadding+"d", data, int16(casi-previous))
+		newCases := int16(casi - previous)
+		fmt.Printf("%s\t%"+maxPadding+"d\t\t%"+maxPadding+"d", data, newCases, casi)
 		if previous > 0 {
 			perc = int16(100.0/float32(previous)*float32(casi)) - 100
-			fmt.Printf(" -> %+4d%%", perc)
+			if perc == 0 {
+				fmt.Print("\t\t   0%")
+			} else if perc > 0 {
+				c := color.New(color.FgRed)
+				c.Printf("\t\t%+4d%%", perc)
+			} else if perc < 0 {
+				c := color.New(color.FgGreen)
+				c.Printf("\t\t%+4d%%", perc)
+			}
 		}
-		if perc == worst && casi == max {
-			fmt.Printf(" WORST INCREASE & PEAK")
-		} else if perc == worst {
-			fmt.Printf(" WORST INCREASE")
-		} else if casi == max {
+		if newCases == worst {
 			fmt.Printf(" WORST PEAK")
 		}
 		fmt.Print("\n")
@@ -63,12 +72,11 @@ func calculateWorst(data map[string]uint32, keys []string) int16 {
 	var previous uint32 = 0
 
 	for _, k := range keys {
-		casi := data[k]
-		perc := int16(100.0/float32(previous)*float32(casi)) - 100
-		previous = casi
+		newCases := int16(data[k] - previous)
+		previous = data[k]
 
-		if perc > max {
-			max = perc
+		if newCases > max {
+			max = newCases
 		}
 	}
 

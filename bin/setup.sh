@@ -5,7 +5,7 @@ git submodule update
 # CLI
 go mod tidy
 go mod vendor
-go build main.go +o ./bin/covid19-trend
+go build -o ./bin/covid19-trend main.go
 ./bin/covid19-trend --help
 
 # WEB
