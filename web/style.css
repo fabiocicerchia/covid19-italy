@@ -15,16 +15,16 @@ a {
 
 /* FOOTER */
 footer {
-    position: absolute;
     bottom: 0.5em;
+    position: absolute;
 }
 footer a svg { margin-top: -5px; }
 
 /* RESULTS */
 #results {
-    width: 100%;
-    max-height: 400px;
     border: 0;
+    max-height: 400px;
+    width: 100%;
 }
 
 .alert strong { font-size: 1.2em; }
@@ -47,15 +47,20 @@ main > .container-fluid > .row,
 #dayBefore,
 #dayAfter,
 #dayLast {
+    background-color: white;
+    border-radius: 5px;
+    border-radius: 5px;
+    border: 2px solid rgba(0,0,0,.2);
+    box-shadow: 2px 2px 5px #CCCCCC;
+    color: black;
+    float: right;
+    font-size: 0.6em;
+    font-weight: bold;
+    height: 30px;
     position: absolute;
     top: 1em;
-    z-index: 999;
-    height: 30px;
     width: 30px;
-    color: black;
-    border-radius: 5px;
-    font-size: 0.6em;
-    float: right;
+    z-index: 999;
 }
 #dayPlay { right: 18em; }
 #dayFirst { right: 14em; }
@@ -64,28 +69,32 @@ main > .container-fluid > .row,
 #dayLast { right: 2em; }
 
 #lastUpdate {
-    position: absolute;
     background: white;
+    border-radius: 5px;
+    border: 2px solid rgba(0,0,0,.2);
+    box-shadow: 2px 2px 5px #CCCCCC;
+    display: block;
+    font-size: 0.7em;
+    font-weight: bold;
+    padding: 0.7em;
+    position: absolute;
+    right: 2em;
     top: 5em;
     z-index: 999;
-    display: block;
-    right: 2.5em;
-    font-size: 0.6em;
-    padding: 0.5em;
 }
 
 #loader {
     background-color: grey;
-    opacity: 0.5;
-    width: 100%;
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
     height: 100%;
-    z-index: 999999;
+    opacity: 0.5;
+    padding-top: 50%;
     position: absolute;
     text-align: center;
-    font-weight: bold;
-    color: white;
-    padding-top: 50%;
-    font-size: 2em;
+    width: 100%;
+    z-index: 999999;
 }
 
 /* MEDIA QUERIES */

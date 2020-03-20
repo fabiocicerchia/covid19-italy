@@ -1,12 +1,12 @@
 package reportformatter
 
 import (
-	"testing"
 	"bytes"
 	"io"
 	"log"
 	"os"
 	"sync"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 
@@ -72,10 +72,10 @@ func TestOutputWithSomeData(t *testing.T) {
 
 	expected := `COVID-19 TOTAL CASES IN ROMA
 2020-03-10: 1
-2020-03-11: 2 -> +100%
+2020-03-11: 2 -> +100% WORST INCREASE
 2020-03-12: 3 ->  +50%
-2020-03-13: 4 ->  +33%
-2020-03-14: 4 ->   +0%
+2020-03-13: 4 ->  +33% WORST PEAK
+2020-03-14: 4 ->   +0% WORST PEAK
 2020-03-15: 3 ->  -25%
 2020-03-16: 2 ->  -34%
 2020-03-17: 1 ->  -50%

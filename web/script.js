@@ -174,7 +174,8 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
                 var parsedDate = item.data.substr(0, 10);
                 if (typeof dataHistory['province'][parsedDate] === 'undefined') dataHistory['province'][parsedDate] = {};
                 province = normalisePlace(item.denominazione_provincia);
-                dataHistory['province'][parsedDate][province] = { total: parseInt(item.totale_casi, 10) };
+                if (typeof dataHistory['province'][parsedDate][province] !== "undefined") dataHistory['province'][parsedDate][province].total += parseInt(item.totale_casi, 10);
+                else dataHistory['province'][parsedDate][province] = { total: parseInt(item.totale_casi, 10) };
         }
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
@@ -258,7 +259,7 @@ document.getElementById('dayFirst').addEventListener('click', function() {
 document.getElementById('dayBefore').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var before = calcDateBefore(lastUpdate);
-    if (dataPoint = getDataPoint(currentType, before) !== undefined) {
+    if ((dataPoint = getDataPoint(currentType, before)) !== undefined) {
         lastUpdate = before;
 
         paintMap(currentType, dataPoint, getDataPoint(currentType, calcDateBefore(before)), before);
@@ -268,7 +269,7 @@ document.getElementById('dayAfter').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
     var after = calcDateAfter(lastUpdate);
 
-    if (dataPoint = getDataPoint(currentType, after) !== undefined) {
+    if ((dataPoint = getDataPoint(currentType, after)) !== undefined) {
         lastUpdate = after;
 
         paintMap(currentType, dataPoint, getDataPoint(currentType, calcDateBefore(after)), after);
