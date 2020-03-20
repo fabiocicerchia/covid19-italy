@@ -246,7 +246,6 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate   = dataHistory['province'][today] ? today : yesterday;
         var sumCases = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
-        document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
         document.getElementById('num_total').innerHTML  = sumCases.toLocaleString();
 
         paintMap(dataProvince, getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate, 'province');
