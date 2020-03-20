@@ -1,0 +1,19 @@
+dist: bionic
+
+language: go
+
+go:
+  - "1.14"
+
+sudo: false
+
+install:
+  - export GOPATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace:$GOPATH"
+  - export PATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace/bin:$PATH"
+  - ln -s /home/travis/gopath/src/github.com/fabiocicerchia/covid19-italy /home/travis/.gimme/versions/go1.14.linux.amd64/src/cli
+
+scripts:
+  - go get -t -v ./...
+  - go mod tidy
+  - go mod vendor
+  - go test -v ./...
