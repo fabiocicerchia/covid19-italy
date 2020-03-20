@@ -27,9 +27,15 @@ footer a svg { margin-top: -5px; }
     border: 0;
 }
 
+.alert strong { font-size: 1.2em; }
+
 /* MAP */
+main { height: calc(100% - 47px); }
+
+main > .container-fluid,
+main > .container-fluid > .row,
 #map {
-    height: 700px;
+    height: 100%;
 }
 
 .leaflet-popup-content strong {

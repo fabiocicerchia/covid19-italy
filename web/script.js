@@ -77,7 +77,7 @@ function fetchGeojson(type, callback) {
     callback(geojsonCache[type]);
 }
 
-function paintMap(type, data, lastUpdateDate) {
+function paintMap(type, data, previousData, lastUpdateDate) {
     document.getElementById('loader').classList.remove('d-none');
     document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
     var max = Math.max.apply(Math, Object.values(data).map((i) => i.total));
@@ -106,7 +106,8 @@ function paintMap(type, data, lastUpdateDate) {
                            : normalisePlace(feature.properties.prov_name);
                 var cases = data[place].total;
                 var popupContent = '<strong>' + place + (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)') + '</strong><br>';
-                popupContent += 'Cases: ' + cases.toLocaleString() + '<br>';
+                var trendIcon = previousData == undefined ? '' : (cases > previousData[place].total ? ' &#21e7;' : ' &#21e9;');
+                popupContent += 'Cases: ' + cases.toLocaleString() + trendIcon + '<br>';
                 if (type === 'region') {
                    popupContent += 'Recovered: ' + data[place].recovered.toLocaleString() + '<br>';
                    popupContent += 'Deaths: ' + data[place].death.toLocaleString() + '<br>';
@@ -115,9 +116,10 @@ function paintMap(type, data, lastUpdateDate) {
                 popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
 
                 if (place === 'p.a. trento') {
-                   popupContent += '<br><strong>P.A. Bolzano</strong><br>';
-                   popupContent += 'Cases: ' + data['p.a. bolzano'].total.toLocaleString() + '<br>';
-                   popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
+                    trendIcon = previousData == undefined ? '' : (cases > previousData['p.a. bolzano'].total ? ' &#21e7;' : ' &#21e9;');
+                    popupContent += '<br><strong>P.A. Bolzano</strong><br>';
+                    popupContent += 'Cases: ' + data['p.a. bolzano'].total.toLocaleString() + trendIcon +'<br>';
+                    popupContent += '<small>Updated on ' + lastUpdateDate + '</small>';
                 }
                 layer.bindPopup(popupContent);
            }
@@ -141,7 +143,7 @@ document.getElementById('search-form').onsubmit = function(e) {
     var valueField = document.getElementById('value-form');
     valueField.value = valueField.value ? normalisePlace(valueField.value) : '';
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    paintMap(currentType, dataHistory[currentType][lastUpdate], lastUpdate);
+    paintMap(currentType, getDataPoint(currentType, lastUpdate), getDataPoint(currentType, calcDateBefore(lastUpdate)), lastUpdate);
 };
 
 // COVID DATA
@@ -181,7 +183,7 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         document.getElementById('totalCases').innerHTML = sumCases.toLocaleString();
         document.getElementById('num_total').innerHTML = sumCases.toLocaleString();
 
-        paintMap('province', dataProvince, lastUpdate);
+        paintMap('province', dataProvince, getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate);
     }
 });
 
@@ -221,6 +223,24 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
     }
 });
 
+function calcDateBefore(baseDate) {
+    var date = new Date(Date.parse(baseDate) - (24 * 60 * 60 * 1000));
+    var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
+
+    return before;
+}
+
+function calcDateAfter(baseDate) {
+    var date = new Date(Date.parse(baseDate) + (24 * 60 * 60 * 1000));
+    var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
+
+    return after;
+}
+
+function getDataPoint(type, date) {
+    return typeof dataHistory[type][date] === 'undefined' ? undefined : dataHistory[type][date];
+}
+
 playInterval = undefined;
 document.getElementById('dayPlay').addEventListener('click', function() {
     document.getElementById('dayFirst').dispatchEvent(new MouseEvent('click', {}));
@@ -233,28 +253,25 @@ document.getElementById('dayFirst').addEventListener('click', function() {
     var first = Object.keys(dataHistory[currentType])[0];
     lastUpdate = first;
 
-    paintMap(currentType, dataHistory[currentType][first], first);
+    paintMap(currentType, getDataPoint(currentType, first), undefined, first);
 });
 document.getElementById('dayBefore').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var date = new Date(Date.parse(lastUpdate) - (24 * 60 * 60 * 1000));
-    var before = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
-
-    if (dataHistory[currentType][before] !== undefined) {
+    var before = calcDateBefore(lastUpdate);
+    if (dataPoint = getDataPoint(currentType, before) !== undefined) {
         lastUpdate = before;
 
-        paintMap(currentType, dataHistory[currentType][before], before);
+        paintMap(currentType, dataPoint, getDataPoint(currentType, calcDateBefore(before)), before);
     }
 });
 document.getElementById('dayAfter').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var date = new Date(Date.parse(lastUpdate) + (24 * 60 * 60 * 1000));
-    var after = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
+    var after = calcDateAfter(lastUpdate);
 
-    if (dataHistory[currentType][after] !== undefined) {
+    if (dataPoint = getDataPoint(currentType, after) !== undefined) {
         lastUpdate = after;
 
-        paintMap(currentType, dataHistory[currentType][after], after);
+        paintMap(currentType, dataPoint, getDataPoint(currentType, calcDateBefore(after)), after);
     } else {
         // stop the play, even if didn't start
         playInterval = undefined;
@@ -262,16 +279,15 @@ document.getElementById('dayAfter').addEventListener('click', function() {
 });
 document.getElementById('dayLast').addEventListener('click', function() {
     var currentType = document.querySelector('input[name="type"]:checked').value;
-    var last = Object.keys(dataHistory[currentType])[Object.keys(dataHistory[currentType]).length - 1];
-    lastUpdate = last;
+    lastUpdate = Object.keys(dataHistory[currentType])[Object.keys(dataHistory[currentType]).length - 1];
 
-    paintMap(currentType, dataHistory[currentType][last], last);
+    paintMap(currentType, getDataPoint(currentType, lastUpdate), getDataPoint(currentType, calcDateBefore(lastUpdate)), lastUpdate);
 });
 document.getElementById('type-region').addEventListener('click', function() {
-    paintMap('region', dataHistory['region'][lastUpdate], lastUpdate);
+    paintMap('region', getDataPoint('region', lastUpdate), getDataPoint('region', calcDateBefore(lastUpdate)), lastUpdate);
 });
 document.getElementById('type-province').addEventListener('click', function() {
-    paintMap('province', dataHistory['province'][lastUpdate], lastUpdate);
+    paintMap('province', getDataPoint('province', lastUpdate), getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate);
 });
 
 $(function () {
