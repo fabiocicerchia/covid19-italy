@@ -38,7 +38,7 @@ normalisedPlaces = {
 
 tplPopup = {
     'province': '<strong>{PLACE}{REGION_LINK}</strong><br>Cases: {CASES} {TREND}<br><small>Updated on {DATE}</small>',
-    'region': '<strong>{PLACE}</strong>Cases: {CASES} {TREND}<br>Recovered: {RECOVER}<br>Deaths: {DEATH}<br>Mortality Rate: {RATE}%<br><small>Updated on {DATE}</small>'
+    'region': '<strong>{PLACE}</strong><br>Cases: {CASES} {TREND}<br>Recovered: {RECOVER}<br>Deaths: {DEATH}<br>Mortality Rate: {RATE}%<br><small>Updated on {DATE}</small>'
 };
 
 // UTILITIES
@@ -177,7 +177,7 @@ function paintMap(data, previousData, lastUpdateDate, type) {
                         ? ''
                         : (cases > previousData[itemName].total ? ' &uarr;' : ' &darr;');
     
-                    popupContent += tplPopup[type]
+                    popupContent += '<br>'+tplPopup[type]
                         .replace('{PLACE}', 'P.A. Bolzano')
                         .replace('{REGION_LINK}', (type !== 'province' ? '' : ' (<a onclick="switchRegion(this)">'+feature.properties.reg_name+'</a>)'))
                         .replace('{CASES}', data[itemName].total.toLocaleString())
@@ -248,8 +248,10 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         });
         var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
         lastUpdate   = dataHistory['province'][today] ? today : yesterday;
-        var sumCases = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
-        document.getElementById('num_total').innerHTML  = sumCases.toLocaleString();
+        var total = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var totalY = Object.values(dataHistory['province'][yesterday]).map((i) => i.total).reduce((a, b) => a + b, 0);
+        document.getElementById('num_total').innerHTML  = total.toLocaleString();
+        document.getElementById('num_total_delta').innerHTML = (100 / totalY * total).toFixed(0) + '%';
 
         paintMap(dataProvince, getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate, 'province');
     }
@@ -282,9 +284,11 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
         var recovered  = Object.values(dataRegion).map((i) => i.recovered).reduce((a, b) => a + b, 0);
         var active     = Object.values(dataRegion).map((i) => i.total_active).reduce((a, b) => a + b, 0);
+        var activeY    = Object.values(dataHistory['region'][yesterday]).map((i) => i.total_active).reduce((a, b) => a + b, 0);
         var deaths     = Object.values(dataRegion).map((i) => i.death).reduce((a, b) => a + b, 0);
         var sumCases   = Object.values(dataRegion).map((i) => i.total).reduce((a, b) => a + b, 0);
         document.getElementById('num_active').innerHTML       = active.toLocaleString();
+        document.getElementById('num_active_delta').innerHTML = (100 / activeY * active).toFixed(0) + '%';
         document.getElementById('num_death').innerHTML        = deaths.toLocaleString();
         document.getElementById('num_death_rate').innerHTML   = (100 / sumCases * deaths).toFixed(0) + '%';
         document.getElementById('num_recover').innerHTML      = recovered.toLocaleString();
@@ -330,7 +334,10 @@ document.getElementById('dayLast').addEventListener('click', function() {
 });
 document.querySelectorAll('.btn-switch[data-type]').forEach(function (item) {
     item.addEventListener('click', function() {
-        paintMap(this.data['type'], getDataPoint(this.data['type'], lastUpdate), getDataPoint(this.data['type'], calcDateBefore(lastUpdate)), lastUpdate);
+        document.querySelector('#type-province input').checked = false;
+        document.querySelector('#type-region input').checked = false;
+        document.querySelector('#type-' + this.dataset['type'] + ' input').checked = true;
+        paintMap(getDataPoint(lastUpdate), getDataPoint(calcDateBefore(lastUpdate)), lastUpdate);
     });
 });
 

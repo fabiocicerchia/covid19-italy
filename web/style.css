@@ -110,6 +110,7 @@ a {
     #value-form { width: 280px; }
 }
 @media only screen and (max-width: 425px) {
+    .navbar .small { font-size: 10px; }
     #value-form { width: 320px; }
 }
 @media only screen and (max-width: 375px) {
