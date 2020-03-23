@@ -67,13 +67,13 @@ function fetchJSONFile(path, callback) {
 function switchRegion(el) {
     document.getElementById('type-form-region').checked = true
     document.getElementById('value-form').value = normalisePlace(el.innerHTML);
-    lookup();
+    lookupAndRepaint();
 }
 
 function normalisePlace(place) {
-    var lowerPlace = (place ?? '').toLowerCase();
+    var lowerPlace = (typeof place !== 'undefined' ? place : '').toLowerCase();
 
-    return normalisedPlaces[lowerPlace] ?? lowerPlace;
+    return typeof normalisedPlaces[lowerPlace] !== 'undefined' ? normalisedPlaces[lowerPlace] : lowerPlace;
 }
 
 geojsonCache = {region: undefined, province: undefined};
@@ -105,7 +105,7 @@ function calcDateAfter(baseDate) {
 }
 
 function getDataPoint(date) {
-    return dataHistory[getCurrentType()][date] ?? undefined;
+    return typeof dataHistory[getCurrentType()][date] !== 'undefined' ? dataHistory[getCurrentType()][date] : undefined;
 }
 
 function getCurrentType() {
@@ -115,15 +115,18 @@ function getCurrentType() {
 function lookup() {
     var valueField = document.getElementById('value-form');
     valueField.value = valueField.value ? normalisePlace(valueField.value) : '';
-    paintMap(getDataPoint(lastUpdate), getDataPoint(calcDateBefore(lastUpdate)), lastUpdate);
 
     xhrCall('/trend.php?type=' + getCurrentType() + '&value=' + valueField.value, function (responseText) {
         document.getElementById('results').innerHTML = responseText;
     });
 };
+function lookupAndRepaint() {
+    lookup();
+    paintMap(getDataPoint(lastUpdate), getDataPoint(calcDateBefore(lastUpdate)), lastUpdate);
+};
 
 function paintMap(data, previousData, lastUpdateDate, type) {
-    type = type ?? getCurrentType();
+    type = typeof type !== 'undefined' ? type : getCurrentType();
 
     document.getElementById('loader').classList.remove('d-none');
     document.getElementById('lastUpdate').innerHTML = lastUpdateDate;
@@ -166,7 +169,7 @@ function paintMap(data, previousData, lastUpdateDate, type) {
                     .replace('{RECOVER}', data[itemName].recovered.toLocaleString())
                     .replace('{DEATH}', data[itemName].death.toLocaleString())
                     .replace('{RATE}', (100 / cases * data[itemName].death).toFixed(0))
-                    .replace('{DATE}', lastUpdateDate)
+                    .replace('{DATE}', lastUpdateDate);
 
                 if (itemName === 'p.a. trento') {
                     itemName = 'p.a. bolzano';
@@ -182,7 +185,7 @@ function paintMap(data, previousData, lastUpdateDate, type) {
                         .replace('{RECOVER}', data[itemName].recovered.toLocaleString())
                         .replace('{DEATH}', data[itemName].death.toLocaleString())
                         .replace('{RATE}', (100 / cases * data[itemName].death).toFixed(0))
-                        .replace('{DATE}', lastUpdateDate)
+                        .replace('{DATE}', lastUpdateDate);
                 }
                 layer.bindPopup(popupContent);
            }
@@ -204,7 +207,7 @@ function paintMap(data, previousData, lastUpdateDate, type) {
 // SEARCH FORM
 document.getElementById('search-form').onsubmit = function(e) {
     e.preventDefault();
-    lookup();
+    lookupAndRepaint();
 };
 
 // INIT DATA
