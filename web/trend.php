@@ -1,4 +1,4 @@
-<pre><?php
+<?php
 
 $type  = preg_replace('/[^a-z]/i', '', $_GET['type']); // region or province
 $value = preg_replace('/[^a-z .\']/i', '', $_GET['value']); // region or province

@@ -233,6 +233,7 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var date = new Date();
         var today = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
         var yesterday = calcDateBefore(today);
+        var beforeYesterday = calcDateBefore(yesterday);
         results.data.forEach(function(item) {
             if (item.data !== "") {
                 var parsedDate = item.data.substr(0, 10);
@@ -246,12 +247,15 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
                 };
             }
         });
-        var dataProvince = dataHistory['province'][today] || dataHistory['province'][yesterday];
-        lastUpdate   = dataHistory['province'][today] ? today : yesterday;
-        var total = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
-        var totalY = Object.values(dataHistory['province'][yesterday]).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var dataProvince  = dataHistory['province'][today] || dataHistory['province'][yesterday];
+        var dataProvinceY = dataHistory['province'][today] ? dataHistory['province'][yesterday] : dataHistory['province'][beforeYesterday];
+        lastUpdate        = dataHistory['province'][today] ? today : yesterday;
+        var total         = Object.values(dataProvince).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var totalY        = Object.values(dataProvinceY).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var delta         = 100 / totalY * total;
         document.getElementById('num_total').innerHTML  = total.toLocaleString();
-        document.getElementById('num_total_delta').innerHTML = (100 / totalY * total).toFixed(0) + '%';
+        if (delta > 100) document.getElementById('num_total_delta').innerHTML = '+' + (delta - 100).toFixed(0) + '%';
+        else document.getElementById('num_total_delta').innerHTML = '-' + delta.toFixed(0) + '%';
 
         paintMap(dataProvince, getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate, 'province');
     }
@@ -264,6 +268,7 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         var date = new Date();
         var today = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + (date.getDate()).toString().padStart(2, '0');
         var yesterday = calcDateBefore(today);
+        var beforeYesterday = calcDateBefore(yesterday);
 
         results.data.forEach(function(item) {
             var parsedDate = item.data.substr(0, 10);
@@ -281,18 +286,46 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
                 tests:        parseInt(item.tamponi, 10),
             };
         });
-        var dataRegion = dataHistory['region'][today] || dataHistory['region'][yesterday];
-        var recovered  = Object.values(dataRegion).map((i) => i.recovered).reduce((a, b) => a + b, 0);
-        var active     = Object.values(dataRegion).map((i) => i.total_active).reduce((a, b) => a + b, 0);
-        var activeY    = Object.values(dataHistory['region'][yesterday]).map((i) => i.total_active).reduce((a, b) => a + b, 0);
-        var deaths     = Object.values(dataRegion).map((i) => i.death).reduce((a, b) => a + b, 0);
-        var sumCases   = Object.values(dataRegion).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var dataRegion  = dataHistory['region'][today] || dataHistory['region'][yesterday];
+        var dataRegionY = dataHistory['region'][today] ? dataHistory['region'][yesterday] : dataHistory['region'][beforeYesterday];
+        var recovered   = Object.values(dataRegion).map((i) => i.recovered).reduce((a, b) => a + b, 0);
+        var active      = Object.values(dataRegion).map((i) => i.total_active).reduce((a, b) => a + b, 0);
+        var activeY     = Object.values(dataRegionY).map((i) => i.total_active).reduce((a, b) => a + b, 0);
+        var newCases    = Object.values(dataRegion).map((i) => i.new_active).reduce((a, b) => a + b, 0);
+        var newCasesY   = Object.values(dataRegionY).map((i) => i.new_active).reduce((a, b) => a + b, 0);
+        var deaths      = Object.values(dataRegion).map((i) => i.death).reduce((a, b) => a + b, 0);
+        var sumCases    = Object.values(dataRegion).map((i) => i.total).reduce((a, b) => a + b, 0);
+        var activeDelta = 100 / activeY * active;
+        var newDelta    = 100 - (100 / newCasesY * newCases);
+        document.getElementById('num_new').innerHTML          = newCases.toLocaleString();
         document.getElementById('num_active').innerHTML       = active.toLocaleString();
-        document.getElementById('num_active_delta').innerHTML = (100 / activeY * active).toFixed(0) + '%';
         document.getElementById('num_death').innerHTML        = deaths.toLocaleString();
         document.getElementById('num_death_rate').innerHTML   = (100 / sumCases * deaths).toFixed(0) + '%';
         document.getElementById('num_recover').innerHTML      = recovered.toLocaleString();
         document.getElementById('num_recover_rate').innerHTML = (100 / sumCases * recovered).toFixed(0) + '%';
+        if (activeDelta > 100) document.getElementById('num_active_delta').innerHTML = '+' + (activeDelta - 100).toFixed(0) + '%';
+        else document.getElementById('num_active_delta').innerHTML = '-' + activeDelta.toFixed(0) + '%';
+        if (newDelta > 100) document.getElementById('num_new_delta').innerHTML = '+' + (newDelta - 100).toFixed(0) + '%';
+        else document.getElementById('num_new_delta').innerHTML = '-' + newDelta.toFixed(0) + '%';
+
+        var dataLabels = Object.keys(dataHistory['region']).filter((i) => i !== "");
+        var newPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.new_active || 0).reduce((a, b) => a + b, 0));
+        var recoverPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.recovered || 0).reduce((a, b) => a + b, 0));
+        var deathPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.death || 0).reduce((a, b) => a + b, 0));
+        var ctx = document.getElementById('chart').getContext('2d');
+        var myLineChart = new Chart(ctx, {
+            type: 'line',
+            options: {
+            },
+            data: {
+                labels: dataLabels,
+                datasets: [
+                    {label: 'Deaths', data: deathPoints, borderColor: 'rgba(241,146,146, .5)', backgroundColor: 'transparent'},
+                    {label: 'Recovered', data: recoverPoints, borderColor: 'rgba(203,226,176, .5)', backgroundColor: 'transparent'},
+                    {label: 'New Cases', data: newPoints, borderColor: '#de7119', backgroundColor: 'transparent'},
+                ]
+            }
+        });
     }
 });
 

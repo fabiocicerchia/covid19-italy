@@ -13,6 +13,16 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161404746-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-XXXXXXXXX-X');
+        </script>
     </head>
     <body>
         <header>
@@ -59,17 +69,22 @@
                             <a href="https://datastudio.google.com/reporting/91350339-2c97-49b5-92b8-965996530f00" target="_blank">Coronavirus Italia - Google Data Studio</a> by <a href="https://twitter.com/FMossotto" target="_blank">FMossotto</a>.
                         </div>
                         <div class="row">
-                            <div class="col-6 col-md-3 px-1 px-md-1 pl-2 pl-md-3">
-                                <div class="alert alert-danger small px-2" role="alert">Total Cases <strong id="num_total"></strong> (<strong id="num_total_delta"></strong> of yesterday)</div>
+                            <div class="col-12 col-md-4 px-3 px-md-1 pl-2 pl-md-3">
+                                <div class="alert alert-danger small mb-2 px-2" role="alert">Total Cases <strong id="num_total"></strong> (<strong id="num_total_delta"></strong>)</div>
                             </div>
-                            <div class="col-6 col-md-3 px-1 px-md-1 pr-2">
-                                <div class="alert alert-danger small px-2" role="alert">Actual Cases <strong id="num_active"></strong> (<strong id="num_active_delta"></strong> of yesterday)</div>
+                            <div class="col-12 col-md-4 px-3 px-md-1 pr-2">
+                                <div class="alert alert-danger small mb-2 px-2" role="alert">Actual Cases <strong id="num_active"></strong> (<strong id="num_active_delta"></strong>)</div>
                             </div>
-                            <div class="col-6 col-md-3 px-1 px-md-1 pl-2">
-                                <div class="alert alert-success small px-2" role="alert">Recovered <strong id="num_recover"></strong> (<strong id="num_recover_rate"></strong>)</div>
+                            <div class="col-12 col-md-4 px-3 px-md-1 pr-2 pr-md-3">
+                                <div class="alert alert-danger small mb-2 px-2" role="alert">New Cases <strong id="num_new"></strong> (<strong id="num_new_delta"></strong>)</div>
                             </div>
-                            <div class="col-6 col-md-3 px-1 px-md-1 pr-2 pr-md-3">
-                                <div class="alert alert-dark small px-2" role="alert">Deaths <strong id="num_death"></strong> (<strong id="num_death_rate"></strong>)</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 pr-1 pl-3 px-md-1 pl-2 pl-md-3">
+                                <div class="alert alert-success small mb-2 px-2" role="alert">Recovered <strong id="num_recover"></strong> (<strong id="num_recover_rate"></strong>)</div>
+                            </div>
+                            <div class="col-6 pr-1 pl-3 px-md-1 pr-2 pr-md-3">
+                                <div class="alert alert-dark small mb-2 px-2" role="alert">Deaths <strong id="num_death"></strong> (<strong id="num_death_rate"></strong>)</div>
                             </div>
                         </div>
                         <p>Use the following form to look for a region or a province in Italy:</p>
@@ -102,6 +117,7 @@
                             <input type="button" id="dayAfter" value="&gt;&gt;" data-toggle="tooltip" data-placement="bottom" title="+1 day"/>
                             <input type="button" id="dayLast" value="&gt;|" data-toggle="tooltip" data-placement="bottom" title="Today"/>
                         </div>
+                        <canvas id="chart" height="150"></canvas>
                         <script src="/script.js"></script>
                     </div>
                 </div>
