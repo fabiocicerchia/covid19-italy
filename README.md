@@ -2,6 +2,7 @@
 
 [![Pull Requests](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?longCache=true)](https://github.com/fabiocicerchia/covid19-italy/pulls)
 [![MIT License](https://img.shields.io/badge/License-MIT-lightgrey.svg?longCache=true)](LICENSE)
+[![Build Status](https://travis-ci.com/fabiocicerchia/covid19-italy.svg?branch=master)](https://travis-ci.com/fabiocicerchia/covid19-italy)
 
 **What's COVID-19?**
 
