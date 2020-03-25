@@ -217,7 +217,10 @@ playInterval = undefined;
 dataHistory  = {region: {}, province: {}};
 
 // GEOMAP
-var map = L.map('map').setView([41.8719, 12.5674], 6);
+var map = L.map('map', {
+    zoomDelta: 0.25,
+    zoomSnap: 0
+}).setView([41.8719, 12.5674], 6);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZmFiaW9jaWNlcmNoaWEiLCJhIjoiY2s3b2phNXhxMDlzbTNncDkzY3pkb2YxYSJ9.37ZdJEamTJMHvbticJ25CQ', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
