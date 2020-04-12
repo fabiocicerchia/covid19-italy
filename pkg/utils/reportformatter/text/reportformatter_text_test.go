@@ -1,4 +1,4 @@
-package reportformatter
+package reportformatter_text
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	reportformatter "cli/pkg/utils/reportformatter"
+	reportformatter_text "cli/pkg/utils/reportformatter/text"
 )
 
 // Ref: https://gist.github.com/hauxe/e935a7f9012bf2649710cf75af323dbf
@@ -44,7 +44,7 @@ func captureOutput(f func()) string {
 func TestOutputWithNoData(t *testing.T) {
 	data := make(map[string]uint32)
 	actual := captureOutput(func() {
-		reportformatter.Output("roma", data)
+		reportformatter_text.Output("roma", data)
 	})
 
 	expected := `COVID-19 NEW CASES IN ROMA
@@ -68,7 +68,7 @@ func TestOutputWithSomeData(t *testing.T) {
 	data["2020-03-18"] = 0
 
 	actual := captureOutput(func() {
-		reportformatter.Output("roma", data)
+		reportformatter_text.Output("roma", data)
 	})
 
 	expected := `COVID-19 NEW CASES IN ROMA

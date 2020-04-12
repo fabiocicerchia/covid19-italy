@@ -7,7 +7,8 @@ import (
 
 	reportfactory "cli/pkg/factory/reportfactory"
 	getoptshandler "cli/pkg/utils/getoptshandler"
-	reportformatter "cli/pkg/utils/reportformatter"
+	reportformatter_json "cli/pkg/utils/reportformatter/json"
+	reportformatter_text "cli/pkg/utils/reportformatter/text"
 )
 
 func Config() cli.App {
@@ -31,6 +32,10 @@ func Config() cli.App {
 				Name:  "last-month",
 				Usage: "Show the trends for the last month",
 			},
+			&cli.StringFlag{
+				Name:  "format",
+				Usage: "Output format: text or json (default: text)",
+			},
 		},
 		Action: func(c *cli.Context) error {
 			o := new(getoptshandler.GetoptsHandler)
@@ -44,7 +49,11 @@ func Config() cli.App {
 			service := reportfactory.Create(options["file"], options["type"], options["userChoice"], lastDays)
 			service.ProcessData()
 
-			reportformatter.Output(service.GetUserChoice().GetSelectedValue(), service.GetData())
+			if c.String("format") == "json" {
+				reportformatter_json.Output(service.GetUserChoice().GetSelectedValue(), service.GetData())
+			} else {
+				reportformatter_text.Output(service.GetUserChoice().GetSelectedValue(), service.GetData())
+			}
 
 			return nil
 		},

@@ -59,6 +59,7 @@ GLOBAL OPTIONS:
    --province value  Show the trends for the selected province
    --last-week       Show the trends for the last week (default: false)
    --last-month      Show the trends for the last month (default: false)
+   --format value    Output format: text or json (default: text)
    --help, -h        show help (default: false)
 ```
 

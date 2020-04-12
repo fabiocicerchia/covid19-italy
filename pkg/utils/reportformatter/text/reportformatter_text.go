@@ -1,4 +1,4 @@
-package reportformatter
+package reportformatter_text
 
 import (
 	"fmt"
