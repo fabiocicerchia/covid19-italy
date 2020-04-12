@@ -220,7 +220,7 @@ dataHistory  = {region: {}, province: {}};
 var map = L.map('map', {
     zoomDelta: 0.25,
     zoomSnap: 0
-}).setView([41.8719, 12.5674], 6);
+}).setView([41.8719, 12.5674], 5.75);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZmFiaW9jaWNlcmNoaWEiLCJhIjoiY2s3b2phNXhxMDlzbTNncDkzY3pkb2YxYSJ9.37ZdJEamTJMHvbticJ25CQ', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -258,7 +258,7 @@ Papa.parse('/dpc-covid19-ita-province.csv', {
         var delta         = 100 / totalY * total;
         document.getElementById('num_total').innerHTML  = total.toLocaleString();
         if (delta > 100) document.getElementById('num_total_delta').innerHTML = '+' + (delta - 100).toFixed(0) + '%';
-        else document.getElementById('num_total_delta').innerHTML = '-' + delta.toFixed(0) + '%';
+        else document.getElementById('num_total_delta').innerHTML = '-' + (delta * -1).toFixed(0) + '%';
 
         paintMap(dataProvince, getDataPoint('province', calcDateBefore(lastUpdate)), lastUpdate, 'province');
     }
@@ -282,8 +282,9 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
                 hospitalised: parseInt(item.ricoverati_con_sintomi, 10),
                 icu:          parseInt(item.terapia_intensiva, 10),
                 home:         parseInt(item.isolamento_domiciliare, 10),
-                total_active: parseInt(item.totale_attualmente_positivi, 10),
-                new_active:   parseInt(item.nuovi_attualmente_positivi, 10),
+                total_active: parseInt(item.totale_positivi, 10),
+                //new_active:   parseInt(item.nuovi_positivi, 10),
+                new_active:   parseInt(item.variazione_totale_positivi, 10),
                 recovered:    parseInt(item.dimessi_guariti, 10),
                 death:        parseInt(item.deceduti, 10),
                 tests:        parseInt(item.tamponi, 10),
@@ -306,15 +307,13 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
         document.getElementById('num_death_rate').innerHTML   = (100 / sumCases * deaths).toFixed(0) + '%';
         document.getElementById('num_recover').innerHTML      = recovered.toLocaleString();
         document.getElementById('num_recover_rate').innerHTML = (100 / sumCases * recovered).toFixed(0) + '%';
-        if (activeDelta > 100) document.getElementById('num_active_delta').innerHTML = '+' + (activeDelta - 100).toFixed(0) + '%';
-        else document.getElementById('num_active_delta').innerHTML = '-' + activeDelta.toFixed(0) + '%';
-        if (newDelta > 100) document.getElementById('num_new_delta').innerHTML = '+' + (newDelta - 100).toFixed(0) + '%';
-        else document.getElementById('num_new_delta').innerHTML = '-' + newDelta.toFixed(0) + '%';
+        if (activeDelta > 100) document.getElementById('num_active_delta').innerHTML = (activeDelta - 100).toFixed(0) + '%';
+        else document.getElementById('num_active_delta').innerHTML = '-' + (activeDelta * -1).toFixed(0) + '%';
+        if (newDelta > 100) document.getElementById('num_new_delta').innerHTML = '-' + (newDelta - 100).toFixed(0) + '%';
+        else document.getElementById('num_new_delta').innerHTML = (newDelta * -1).toFixed(0) + '%';
 
         var dataLabels = Object.keys(dataHistory['region']).filter((i) => i !== "");
         var newPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.new_active || 0).reduce((a, b) => a + b, 0));
-        var recoverPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.recovered || 0).reduce((a, b) => a + b, 0));
-        var deathPoints = Object.values(dataHistory['region']).filter((i) => Object.values(i).length > 1).map((v) => Object.values(v).map((i) => i.death || 0).reduce((a, b) => a + b, 0));
         var ctx = document.getElementById('chart').getContext('2d');
         var myLineChart = new Chart(ctx, {
             type: 'line',
@@ -323,8 +322,6 @@ Papa.parse('/dpc-covid19-ita-regioni.csv', {
             data: {
                 labels: dataLabels,
                 datasets: [
-                    {label: 'Deaths', data: deathPoints, borderColor: 'rgba(241,146,146, .5)', backgroundColor: 'transparent'},
-                    {label: 'Recovered', data: recoverPoints, borderColor: 'rgba(203,226,176, .5)', backgroundColor: 'transparent'},
                     {label: 'New Cases', data: newPoints, borderColor: '#de7119', backgroundColor: 'transparent'},
                 ]
             }

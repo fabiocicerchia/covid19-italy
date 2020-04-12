@@ -13,8 +13,7 @@ type error interface {
 	Error() string
 }
 
-
-func (o *GetoptsHandler) HandleOptions(region string, province string , lastMonth bool, lastWeek bool) error {
+func (o *GetoptsHandler) HandleOptions(region string, province string, lastMonth bool, lastWeek bool) error {
 	o.options = make(map[string]string)
 
 	o.options["lastDays"] = "0"
