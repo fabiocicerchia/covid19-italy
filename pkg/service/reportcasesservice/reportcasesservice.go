@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	csv "cli/pkg/valueobject/csv"
-	userchoice "cli/pkg/valueobject/userchoice"
+	csv "covid19.fabiocicerchia.it/cli/pkg/valueobject/csv"
+	userchoice "covid19.fabiocicerchia.it/cli/pkg/valueobject/userchoice"
 )
 
 type ReportCasesService struct {

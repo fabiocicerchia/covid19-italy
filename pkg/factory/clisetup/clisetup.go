@@ -5,10 +5,10 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	reportfactory "cli/pkg/factory/reportfactory"
-	getoptshandler "cli/pkg/utils/getoptshandler"
-	reportformatter_json "cli/pkg/utils/reportformatter/json"
-	reportformatter_text "cli/pkg/utils/reportformatter/text"
+	reportfactory "covid19.fabiocicerchia.it/cli/pkg/factory/reportfactory"
+	getoptshandler "covid19.fabiocicerchia.it/cli/pkg/utils/getoptshandler"
+	reportformatter_json "covid19.fabiocicerchia.it/cli/pkg/utils/reportformatter/json"
+	reportformatter_text "covid19.fabiocicerchia.it/cli/pkg/utils/reportformatter/text"
 )
 
 func Config() cli.App {

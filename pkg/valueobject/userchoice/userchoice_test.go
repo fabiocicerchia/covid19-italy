@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	userchoice "cli/pkg/valueobject/userchoice"
+	userchoice "covid19.fabiocicerchia.it/cli/pkg/valueobject/userchoice"
 )
 
 func TestNewInstanceWithInvalidType(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	getoptshandler "cli/pkg/utils/getoptshandler"
+	getoptshandler "covid19.fabiocicerchia.it/cli/pkg/utils/getoptshandler"
 )
 
 func TestHandleOptionsRegion(t *testing.T) {

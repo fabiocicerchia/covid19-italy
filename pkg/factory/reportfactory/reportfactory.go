@@ -5,9 +5,9 @@ import (
 
 	"github.com/gocarina/gocsv"
 
-	reportcasesservice "cli/pkg/service/reportcasesservice"
-	csv "cli/pkg/valueobject/csv"
-	userchoice "cli/pkg/valueobject/userchoice"
+	reportcasesservice "covid19.fabiocicerchia.it/cli/pkg/service/reportcasesservice"
+	csv "covid19.fabiocicerchia.it/cli/pkg/valueobject/csv"
+	userchoice "covid19.fabiocicerchia.it/cli/pkg/valueobject/userchoice"
 )
 
 func getCsvFileName(file string) string {

@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	reportformatter_json "cli/pkg/utils/reportformatter/json"
+	reportformatter_json "covid19.fabiocicerchia.it/cli/pkg/utils/reportformatter/json"
 )
 
 // Ref: https://gist.github.com/hauxe/e935a7f9012bf2649710cf75af323dbf

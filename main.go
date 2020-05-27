@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	clisetup "cli/pkg/factory/clisetup"
+	clisetup "covid19.fabiocicerchia.it/cli/pkg/factory/clisetup"
 )
 
 func main() {

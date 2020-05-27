@@ -6,7 +6,7 @@ import (
 	"github.com/gocarina/gocsv"
 	"github.com/stretchr/testify/assert"
 
-	reportfactory "cli/pkg/factory/reportfactory"
+	reportfactory "covid19.fabiocicerchia.it/cli/pkg/factory/reportfactory"
 )
 
 func TestProvinceData(t *testing.T) {

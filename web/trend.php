@@ -6,9 +6,9 @@ $format = $_GET['format'] === 'json' ? 'json' : 'text';
 
 $command = 'cd '.__DIR__.'/../ && ./bin/covid19-trend --format ' . $format;
 if ($type === 'region') {
-    $command .= '--region "' . $value . '"';
+    $command .= ' --region "' . $value . '"';
 } elseif ($type === 'province') {
-    $command .= '--province "' . $value . '"';
+    $command .= ' --province "' . $value . '"';
 }
 $command .= ' 2>&1';
 
